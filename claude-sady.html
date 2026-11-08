@@ -1,0 +1,1245 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sadie Sink · Minecraft Portfolio</title>
+<meta name="description" content="Fan-made Minecraft-style portfolio of actress Sadie Sink: Broadway, Stranger Things, The Whale and more.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{
+  --grass:#5EBC2E; --grass-d:#3d8a1c; --dirt:#79553A; --dirt-d:#4e3320;
+  --stone:#7a7a7a; --gold:#FFD84A; --paper:#F3E6C2; --xp:#7CFC00; --heart:#ff3b3b;
+  --pixel:'Press Start 2P',monospace; --mono:'VT323',monospace;
+}
+body.upside{--grass:#8e1f1f; --grass-d:#4a0f0f; --dirt:#3a1414; --dirt-d:#1d0808; --stone:#5a3030; --xp:#ff4040; --gold:#ff8a80}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;background:#0c0c0c}
+body{margin:0;font-family:var(--mono);font-size:24px;line-height:1.25;color:#fff;background:#0c0c0c;overflow-x:hidden}
+body.locked{overflow:hidden}
+h1,h2,h3,h4,h5,h6,.px{font-family:var(--pixel);font-weight:normal;margin:0}
+a{color:inherit}
+button{font-family:var(--mono);font-size:22px;color:#fff;cursor:pointer}
+::selection{background:var(--grass);color:#000}
+.dirt{background-color:var(--dirt);background-image:
+  radial-gradient(circle at 20% 30%, rgba(0,0,0,.25) 0 3px, transparent 4px),
+  radial-gradient(circle at 70% 60%, rgba(255,255,255,.08) 0 2px, transparent 3px),
+  radial-gradient(circle at 45% 80%, rgba(0,0,0,.2) 0 4px, transparent 5px);
+  background-size:37px 37px,53px 53px,29px 29px}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s ease,transform .8s ease}
+.reveal.in{opacity:1;transform:none}
+@keyframes blink{50%{opacity:0}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.shake{animation:shake .5s}
+
+/* LOADER */
+#loader{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background-color:var(--dirt);transition:opacity .7s,visibility .7s}
+#loader.done{opacity:0;visibility:hidden}
+.loader-box{text-align:center;width:min(560px,86vw)}
+.loader-title{font-family:var(--pixel);font-size:clamp(16px,3.4vw,26px);text-shadow:4px 4px 0 #000}
+.blocks{display:flex;gap:6px;justify-content:center;margin:26px 0}
+.blocks span{width:34px;height:34px;border:3px solid #000;background:var(--grass);animation:bob .6s infinite alternate}
+.blocks span:nth-child(2n){background:var(--dirt-d)}
+.blocks span:nth-child(3n){background:var(--stone)}
+.blocks span:nth-child(odd){animation-delay:.15s}
+@keyframes bob{to{transform:translateY(-12px)}}
+.bar{height:26px;border:4px solid #000;background:#222;box-shadow:inset 3px 3px 0 #000}
+.bar>i{display:block;height:100%;width:0;background:repeating-linear-gradient(90deg,#7CFC00 0 14px,#4a9e00 14px 18px);transition:width .3s}
+
+/* BUTTONS & PANELS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-width:190px;padding:14px 22px;background:linear-gradient(#9a9a9a,#7a7a7a 50%,#6a6a6a);border:3px solid #000;box-shadow:inset 3px 3px 0 rgba(255,255,255,.55),inset -3px -4px 0 rgba(0,0,0,.45);color:#fff;text-shadow:2px 2px 0 #333;text-decoration:none;transition:transform .08s,background .15s,color .15s;font-size:24px}
+.btn:hover{background:linear-gradient(#8fa0ff,#5a6cde);color:#ffffa0}
+.btn:active{transform:translateY(3px)}
+.btn.g{background:linear-gradient(#7ed348,#4a9118 55%,#3d7d14)}
+.btn.g:hover{background:linear-gradient(#a6ff66,#5fb62a);color:#fff}
+.btn.sm{min-width:0;padding:8px 14px;font-size:20px}
+.panel{background:#c6c6c6;color:#202020;border:4px solid #000;box-shadow:inset 4px 4px 0 #fff,inset -4px -4px 0 #555,10px 10px 0 rgba(0,0,0,.45);padding:26px}
+.stone{background-color:var(--stone);background-image:linear-gradient(45deg,rgba(0,0,0,.14) 25%,transparent 25%,transparent 75%,rgba(0,0,0,.14) 75%),linear-gradient(45deg,rgba(0,0,0,.14) 25%,transparent 25%,transparent 75%,rgba(0,0,0,.14) 75%);background-size:32px 32px;background-position:0 0,16px 16px;color:#fff;text-shadow:2px 2px 0 #000;border:4px solid #000;box-shadow:inset 4px 4px 0 rgba(255,255,255,.25),inset -4px -4px 0 rgba(0,0,0,.35),10px 10px 0 rgba(0,0,0,.45);padding:26px}
+
+/* HUD */
+#progress{position:fixed;top:0;left:0;height:4px;width:0;background:var(--xp);z-index:950}
+#hud{position:fixed;top:0;left:0;right:0;z-index:800;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:12px 14px;pointer-events:none}
+#hud>*{pointer-events:auto}
+.hearts{font-size:20px;letter-spacing:1px;text-shadow:2px 2px 0 #000;background:rgba(0,0,0,.5);padding:6px 10px;border:2px solid #111;color:var(--heart)}
+.xp{min-width:230px;background:rgba(0,0,0,.5);padding:8px 10px;border:2px solid #111}
+.xp .lv{font-family:var(--pixel);font-size:10px;color:var(--xp);text-shadow:2px 2px 0 #000;display:flex;justify-content:space-between;gap:10px}
+.xp .track{height:10px;background:#222;border:2px solid #000;margin-top:6px}
+.xp .track i{display:block;height:100%;width:0;background:linear-gradient(#c8ff5a,#5EBC2E);transition:width .5s}
+.hud-right{display:flex;gap:8px;flex-direction:column;align-items:flex-end}
+.hud-clock{font-size:18px;background:rgba(0,0,0,.5);padding:4px 8px;border:2px solid #111}
+.hud-btns{display:flex;gap:6px}
+.hud-btn{font-size:18px;padding:6px 10px;background:rgba(0,0,0,.6);border:2px solid #222;color:#fff}
+.hud-btn:hover{border-color:#fff}
+#debug{position:fixed;top:82px;left:14px;z-index:850;background:rgba(0,0,0,.65);font-size:18px;padding:10px 12px;display:none;line-height:1.35;color:#e8e8e8;white-space:pre;border:2px solid #222}
+body.f3 #debug{display:block}
+
+/* HOTBAR */
+#hotbar{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:900;display:flex;gap:6px;padding:6px;background:rgba(0,0,0,.6);border:3px solid #111;backdrop-filter:blur(3px);max-width:96vw;overflow-x:auto}
+.slot{position:relative;width:62px;height:62px;flex:0 0 auto;background:rgba(139,139,139,.55);border:3px solid #000;box-shadow:inset 3px 3px 0 rgba(255,255,255,.35),inset -3px -3px 0 rgba(0,0,0,.4);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:24px;color:#fff;text-decoration:none;transition:transform .12s}
+.slot:hover{transform:translateY(-4px)}
+.slot.on{background:rgba(200,200,200,.9);border-color:#fff}
+.slot .k{position:absolute;top:3px;left:4px;font-family:var(--pixel);font-size:8px;color:#ddd}
+.slot .lbl{font-size:14px;line-height:1;text-shadow:1px 1px 0 #000;margin-top:3px}
+@media(max-width:700px){.slot{width:46px;height:46px;font-size:18px}.slot .lbl{display:none}}
+
+/* HERO */
+#home{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:center;overflow:hidden;background:#6ab0ff}
+#world{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;cursor:crosshair;z-index:0}
+.hero-shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,.05) 60%),linear-gradient(transparent 55%,rgba(0,0,0,.25))}
+.hero-inner{position:relative;z-index:2;width:min(1180px,92vw);margin:auto;display:grid;grid-template-columns:1.25fr .75fr;gap:44px;align-items:center;padding:120px 0 200px;pointer-events:none}
+.hero-inner>*{pointer-events:auto}
+@media(max-width:860px){.hero-inner{grid-template-columns:1fr;padding:110px 0 200px;text-align:center}.btns{justify-content:center}.eyebrow{display:inline-block}}
+.eyebrow{font-family:var(--pixel);font-size:11px;background:#000;display:inline-block;padding:9px 12px;border:3px solid #fff;color:var(--xp);line-height:1.6}
+.title{font-family:var(--pixel);font-size:clamp(40px,8.4vw,112px);line-height:1.02;margin:20px 0 14px;color:#fff;text-shadow:0 6px 0 #1f5a10,0 12px 0 #0b2a06,0 18px 0 #000;letter-spacing:2px}
+.title span{color:var(--grass)}
+.typed{font-size:clamp(24px,2.8vw,32px);min-height:1.4em;color:#ffffa0;text-shadow:2px 2px 0 #000}
+.caret{animation:blink 1s steps(1) infinite;color:var(--xp)}
+.hero-lead{font-size:clamp(20px,2vw,25px);max-width:620px;margin:14px 0 0;text-shadow:2px 2px 0 #000}
+.btns{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
+.hint{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:2;font-size:20px;background:rgba(0,0,0,.55);padding:6px 12px;border:2px solid #111;pointer-events:none;white-space:nowrap}
+
+/* SKIN (photo) */
+.skin{position:relative;margin:0;background:#1f1f1f;border:6px solid #000;box-shadow:inset 0 0 0 4px #3a3a3a,14px 14px 0 rgba(0,0,0,.55);padding:14px;animation:float 4s ease-in-out infinite;max-width:420px;width:100%;justify-self:center}
+@keyframes float{50%{transform:translateY(-10px)}}
+.skin .ph{aspect-ratio:4/5;display:grid;place-items:center;font-family:var(--pixel);font-size:56px;color:var(--xp);text-shadow:4px 4px 0 #000;background:repeating-linear-gradient(45deg,#2b2b2b 0 14px,#333 14px 28px);text-align:center}
+.skin .ph small{display:block;font-family:var(--mono);font-size:18px;color:#ccc;margin-top:14px;text-shadow:none}
+.skin img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;object-position:50% 20%;background:#000}
+.skin figcaption{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap}
+.nametag{font-family:var(--pixel);font-size:11px;background:rgba(0,0,0,.6);padding:8px 10px;color:#fff}
+.credit{display:block;font-size:17px;color:#aaa;margin-top:10px;text-align:center}
+
+/* SECTIONS */
+.sec{position:relative;padding:110px 20px 150px}
+.sec-inner{max-width:1180px;margin:auto}
+.sec-title{display:inline-flex;align-items:center;background:linear-gradient(#7ac74a 0 14px,#8b5e34 14px);border:4px solid #000;box-shadow:8px 8px 0 #000;padding:16px 22px;margin-bottom:34px;cursor:pointer}
+.sec-title h2{font-size:clamp(14px,2.6vw,24px);text-shadow:3px 3px 0 #000}
+.lead{font-size:clamp(22px,2.2vw,28px);text-shadow:2px 2px 0 #000;max-width:840px;margin:0 0 30px}
+.light{color:#1d1d1d}
+.light .lead{text-shadow:none}
+.light .sec-title h2{color:#fff}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px}
+.stat{background:#c6c6c6;color:#222;border:4px solid #000;box-shadow:inset 3px 3px 0 #fff,inset -3px -3px 0 #555,8px 8px 0 #000;padding:18px;text-align:center}
+.stat b{display:block;font-family:var(--pixel);font-size:clamp(20px,3vw,34px);color:#1b5e20;margin-bottom:10px}
+.stat span{font-size:22px}
+
+/* LORE BOOK */
+.book-tabs{display:flex;flex-wrap:wrap;gap:6px}
+.book-tab{font-family:var(--pixel);font-size:10px;padding:12px 14px;background:#555;color:#ddd;border:3px solid #000;border-bottom:none;line-height:1.5}
+.book-tab.on{background:var(--paper);color:#3b2a1a}
+.book-page{background:var(--paper);color:#3b2a1a;border:6px solid #4a3018;box-shadow:12px 12px 0 #000;padding:34px;min-height:300px;font-size:26px;line-height:1.38}
+.book-page h3{font-size:15px;margin-bottom:18px;color:#5a2d0c}
+.book-page p{margin:0 0 14px}
+.book-page.flip{animation:flip .5s ease}
+@keyframes flip{0%{transform:perspective(900px) rotateY(-14deg);opacity:0}100%{transform:none;opacity:1}}
+
+/* ADVANCEMENT TREE */
+.tree{display:grid;gap:16px;position:relative;padding-left:14px}
+.tree::before{content:'';position:absolute;left:44px;top:20px;bottom:20px;width:6px;background:#000}
+.adv{position:relative;display:grid;grid-template-columns:72px 1fr;gap:18px;background:#1e1e1e;border:4px solid #000;box-shadow:8px 8px 0 #000;padding:16px;cursor:pointer;transition:transform .15s}
+.adv:hover{transform:translateX(6px)}
+.adv .ic{width:72px;height:72px;display:grid;place-items:center;font-size:36px;background:#3a3a3a;border:4px solid #000;box-shadow:inset 3px 3px 0 #555;position:relative;z-index:1}
+.adv.done .ic{background:var(--grass);box-shadow:inset 3px 3px 0 #a6ff66}
+.adv.locked{opacity:.65;filter:grayscale(.7)}
+.adv .year{font-size:20px;color:#9ad}
+.adv h4{font-size:12px;color:var(--gold);margin:6px 0 4px;line-height:1.6}
+.adv p{margin:6px 0 0;font-size:22px;color:#ddd;display:none}
+.adv.open p{display:block}
+
+/* CHEST */
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:22px}
+.filter{padding:10px 14px;background:#4b4b4b;border:3px solid #000;color:#fff;font-size:20px}
+.filter.on{background:var(--grass);color:#000}
+.search{flex:1;min-width:220px;background:#000;color:var(--xp);border:3px solid #555;padding:10px 14px;font-family:var(--mono);font-size:22px}
+.chest{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;background:#3a3a3a;border:6px solid #000;padding:18px;box-shadow:inset 0 0 0 4px #8b8b8b,12px 12px 0 #000}
+.item{position:relative;background:#6f6f6f;border:4px solid var(--rc,#fff);box-shadow:inset 3px 3px 0 #999,inset -3px -3px 0 #444;padding:14px;cursor:pointer;min-height:210px;display:flex;flex-direction:column;gap:6px;transition:transform .15s}
+.item:hover,.item:focus{transform:translateY(-5px) rotate(-.6deg);outline:none;box-shadow:inset 3px 3px 0 #999,inset -3px -3px 0 #444,0 0 0 3px #fff}
+.item .big{font-size:52px;text-align:center;margin:8px 0 4px}
+.item h5{font-size:11px;line-height:1.6;color:#fff;text-shadow:2px 2px 0 #000;margin-top:auto}
+.item .meta{font-size:19px;color:#fff;text-shadow:1px 1px 0 #000}
+.item .rar{position:absolute;top:8px;right:8px;font-family:var(--pixel);font-size:8px;padding:4px 6px;background:#000;color:var(--rc);text-transform:uppercase}
+
+/* MODAL */
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;z-index:1000;padding:16px}
+#modal.open{display:flex}
+.mbox{width:min(660px,96vw);max-height:92vh;overflow:auto;background:#c6c6c6;color:#222;border:4px solid #000;box-shadow:inset 4px 4px 0 #fff,12px 12px 0 #000}
+.mhead{background:#4a4a4a;color:#fff;font-family:var(--pixel);font-size:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:4px solid #000;line-height:1.6}
+.mhead button{font-family:var(--pixel);font-size:12px;background:#8b0000;border:3px solid #000;color:#fff;padding:6px 10px}
+.mbody{padding:22px;font-size:24px}
+.mbody .big{font-size:72px;text-align:center}
+.mbody dl{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;margin:0 0 14px;align-items:center}
+.mbody dt{font-family:var(--pixel);font-size:10px;color:#444}
+.mbody dd{margin:0;font-size:24px}
+.mbody img{width:100%;border:4px solid #000}
+
+/* ENCHANT (skills) */
+.skill{margin:18px 0}
+.skill .row{display:flex;justify-content:space-between;font-family:var(--pixel);font-size:11px;margin-bottom:10px;text-shadow:2px 2px 0 #000;gap:10px}
+.bar2{height:26px;background:#111;border:4px solid #000;box-shadow:inset 3px 3px 0 #000}
+.bar2 i{display:block;height:100%;width:0;background:repeating-linear-gradient(90deg,#FFD84A 0 16px,#e0a800 16px 20px);transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+
+/* FRAMES */
+.frames{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px}
+.frame{background:#6b4a2b;border:10px solid #3a2512;box-shadow:8px 8px 0 #000;padding:12px;cursor:pointer;transition:transform .2s}
+.frame:hover{transform:scale(1.02)}
+.frame.drag{outline:4px dashed var(--xp)}
+.frame .pic{height:300px;background:#222 center/cover no-repeat;border:4px solid #000;display:grid;place-items:center;font-family:var(--pixel);font-size:11px;color:#ffe9a8;text-align:center;padding:12px;line-height:1.8}
+.frame .cap{font-size:22px;color:#ffe9a8;text-align:center;margin-top:10px;text-shadow:2px 2px 0 #000}
+.frames-note{color:#c9b28a;font-size:21px;margin-top:20px}
+
+/* TROPHIES & ACHIEVEMENTS */
+.recog{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-bottom:40px}
+.recog .panel{padding:20px}
+.recog h4{font-size:12px;color:#1b5e20;line-height:1.6;margin-bottom:10px}
+.recog p{margin:0;font-size:22px}
+.tag{display:inline-block;font-family:var(--pixel);font-size:8px;padding:4px 6px;border:2px solid #000;margin-top:10px}
+.tag.ok{background:var(--grass);color:#000}
+.tag.check{background:#FFD84A;color:#000}
+.ach-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.ach{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.ach-card{display:flex;gap:14px;align-items:center;background:#202020;border:3px solid #000;box-shadow:6px 6px 0 #000;padding:14px}
+.ach-card .i{width:64px;height:64px;flex:0 0 64px;display:grid;place-items:center;font-size:30px;background:#3a3a3a;border:3px solid #000}
+.ach-card.got .i{background:var(--grass)}
+.ach-card h6{font-size:10px;margin:0 0 6px;color:var(--gold);line-height:1.6}
+.ach-card.got h6{color:var(--xp)}
+.ach-card p{margin:0;font-size:20px;color:#bbb}
+.ach-card.locked{filter:grayscale(1);opacity:.55}
+
+/* CRAFTING */
+.craft{display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:start}
+@media(max-width:800px){.craft{grid-template-columns:1fr}}
+.craft-grid{display:grid;grid-template-columns:repeat(3,92px);gap:6px;background:#8b8b8b;border:4px solid #000;padding:12px;width:max-content;margin:auto}
+.cslot{width:92px;height:92px;background:#373737;border:3px solid #000;display:flex;align-items:center;justify-content:center;font-size:42px;cursor:pointer;user-select:none}
+.cslot:hover{border-color:#fff}
+.cslot.sel{border-color:var(--xp);box-shadow:0 0 14px var(--xp)}
+#craftResult{min-height:150px;background:#373737;border:4px dashed var(--xp);display:flex;align-items:center;justify-content:center;padding:18px;text-align:center;font-size:24px;line-height:1.4}
+#craftResult small{color:#bbb;font-size:20px}
+
+/* MAILBOX */
+.mailgrid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:820px){.mailgrid{grid-template-columns:1fr}}
+.field{width:100%;background:#000;color:var(--xp);border:3px solid #555;padding:12px;font-family:var(--mono);font-size:22px;margin:8px 0 14px}
+textarea.field{min-height:150px;resize:vertical}
+.info p{font-size:23px;margin:0 0 12px}
+
+/* FOOTER */
+footer{background:#0a0a0a;border-top:6px solid #000;padding:30px 20px 40px;text-align:center;color:#999;font-size:20px}
+footer .px{color:#fff;font-size:11px;margin-bottom:12px;line-height:1.8}
+footer a{color:#cfc}
+
+/* TOASTS */
+#toasts{position:fixed;right:14px;top:72px;z-index:3000;display:flex;flex-direction:column;gap:10px;width:min(370px,92vw)}
+.toast{background:#202020;border:3px solid #fff;padding:12px 14px;box-shadow:6px 6px 0 #000;animation:slide .35s ease;display:flex;gap:12px;align-items:center;transition:opacity .4s}
+.toast .ti{font-size:26px;width:46px;height:46px;flex:0 0 46px;background:var(--grass);border:3px solid #000;display:grid;place-items:center}
+.toast b{font-family:var(--pixel);font-size:10px;color:var(--gold);display:block;margin-bottom:6px;line-height:1.6}
+.toast span{font-size:20px;color:#ddd}
+.toast.out{opacity:0}
+@keyframes slide{from{transform:translateX(120%)}}
+
+/* UPSIDE DOWN */
+body.upside::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:700;background:radial-gradient(ellipse at center,transparent 45%,rgba(140,0,0,.55) 100%);animation:flick 3s infinite steps(1)}
+@keyframes flick{0%,100%{opacity:1}92%{opacity:.7}94%{opacity:1}97%{opacity:.45}}
+body.upside #home::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.12) 0 2px,transparent 2px 4px);pointer-events:none;z-index:1}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader" class="dirt">
+  <div class="loader-box">
+    <div class="loader-title">SADIE SINK</div>
+    <div class="blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="bar"><i id="ldBar"></i></div>
+    <p id="ldTxt" style="margin-top:14px">Generating Brenham, Texas...</p>
+    <p style="font-size:19px;color:#ddd">Tip: 1–9 jump · F3 debug · U Upside Down · N night · R rain</p>
+  </div>
+</div>
+
+<canvas id="fx"></canvas>
+<div id="progress"></div>
+
+<!-- HUD -->
+<div id="hud">
+  <div class="hearts" id="hearts">❤❤❤❤❤❤❤❤❤❤</div>
+  <div class="xp">
+    <div class="lv"><span>LVL <b id="lvl">1</b></span><span id="xpTxt">0 / 100 XP</span></div>
+    <div class="track"><i id="xpBar"></i></div>
+  </div>
+  <div class="hud-right">
+    <div class="hud-clock" id="clock">--:-- CT</div>
+    <div class="hud-btns">
+      <button class="hud-btn" id="btnSound" title="Sound (M)">🔊</button>
+      <button class="hud-btn" id="btnUp" title="Upside Down (U)">🌀</button>
+      <button class="hud-btn" id="btnRain" title="Rain (R)">🌧️</button>
+    </div>
+  </div>
+</div>
+<pre id="debug"></pre>
+<div id="toasts"></div>
+
+<!-- HOTBAR -->
+<nav id="hotbar">
+  <a class="slot on" href="#home"><span class="k">1</span>🏠<span class="lbl">Spawn</span></a>
+  <a class="slot" href="#about"><span class="k">2</span>📖<span class="lbl">Lore</span></a>
+  <a class="slot" href="#quest"><span class="k">3</span>🗺️<span class="lbl">Quest</span></a>
+  <a class="slot" href="#chest"><span class="k">4</span>📦<span class="lbl">Chest</span></a>
+  <a class="slot" href="#enchant"><span class="k">5</span>✨<span class="lbl">Enchant</span></a>
+  <a class="slot" href="#frames"><span class="k">6</span>🖼️<span class="lbl">Frames</span></a>
+  <a class="slot" href="#trophy"><span class="k">7</span>🏆<span class="lbl">Trophy</span></a>
+  <a class="slot" href="#craft"><span class="k">8</span>⚒️<span class="lbl">Craft</span></a>
+  <a class="slot" href="#mail"><span class="k">9</span>✉️<span class="lbl">Mail</span></a>
+</nav>
+
+<main>
+<!-- ============ HOME / HERO ============ -->
+<header id="home">
+  <canvas id="world"></canvas>
+  <div class="hero-shade"></div>
+  <div class="hero-inner">
+    <div>
+      <span class="eyebrow">★ SERVER: SADIE-SINK · PLAYERS ONLINE: 1 ★</span>
+      <h1 class="title">SADIE<br><span>SINK</span></h1>
+      <div class="typed"><span id="tt"></span><span class="caret">▌</span></div>
+      <p class="hero-lead">Actress, singer and scream-queen legend. From a Broadway kid in <b>Annie</b> to <b>Max Mayfield</b> of Hawkins, from <b>The Whale</b> to Marvel’s <b>Spider-Man: Brand New Day</b>.</p>
+      <div class="btns">
+        <a class="btn g" href="#about">▶ Enter World</a>
+        <a class="btn" href="#chest">📦 Open Chest</a>
+        <a class="btn" href="#mail">✉ Message</a>
+      </div>
+    </div>
+
+    <figure class="skin" id="skin">
+      <div class="ph" id="ph">SS<small>No photo yet · upload below</small></div>
+      <img id="photo" alt="Sadie Sink" hidden>
+      <figcaption>
+        <div class="nametag">SadieSink_2002</div>
+        <button class="btn sm" id="uploadBtn" type="button">📷 Upload</button>
+      </figcaption>
+      <small class="credit" id="credit">Auto-loads from Wikipedia when online</small>
+      <input type="file" id="fileIn" accept="image/*" hidden>
+    </figure>
+  </div>
+  <div class="hint">⛏ Click the ground to mine · 1–9 navigate · U Upside Down</div>
+</header>
+
+<!-- ============ LORE ============ -->
+<section class="sec dirt reveal" id="about">
+  <div class="sec-inner">
+    <div class="sec-title mine"><h2>📖 LORE BOOK · CHAPTER 1–4</h2></div>
+    <p class="lead">Born in Texas. Raised on Broadway. Forged in Hawkins. Read the story chapter by chapter; finish all four to unlock an advancement.</p>
+
+    <div class="stats">
+      <div class="stat"><b id="statAge">0</b><span>Years old (born Apr 16, 2002)</span></div>
+      <div class="stat"><b id="statYrs">0</b><span>Years performing (since 2012)</span></div>
+      <div class="stat"><b id="statRoles">0</b><span>Works in the chest</span></div>
+      <div class="stat"><b id="statSeasons">0</b><span>Seasons as Max Mayfield (S2–S5)</span></div>
+    </div>
+
+    <div class="panel stone" style="margin:34px 0">
+      <h3 class="px" style="font-size:12px;color:var(--xp)">LIVE FROM WIKIPEDIA</h3>
+      <p id="wikiBlurb" style="font-size:24px;margin:12px 0 0">Loading live bio...</p>
+    </div>
+
+    <div class="book-tabs" id="bookTabs"></div>
+    <div class="book-page" id="bookPage"></div>
+  </div>
+</section>
+
+<!-- ============ QUEST / CAREER ============ -->
+<section class="sec light reveal" id="quest" style="background:linear-gradient(#87CEEB,#dff4ff)">
+  <div class="sec-inner">
+    <div class="sec-title mine"><h2>🗺️ ADVANCEMENT TREE · CAREER</h2></div>
+    <p class="lead">Click any advancement to expand it. The last one is still locked until the film is released.</p>
+    <div class="tree" id="tree"></div>
+  </div>
+</section>
+
+<!-- ============ CHEST / FILMOGRAPHY ============ -->
+<section class="sec dirt reveal" id="chest">
+  <div class="sec-inner">
+    <div class="sec-title mine"><h2>📦 ENDER CHEST · FILMOGRAPHY</h2></div>
+    <div class="toolbar" id="toolbar">
+      <button class="filter on" data-f="all">ALL</button>
+      <button class="filter" data-f="TV">TV</button>
+      <button class="filter" data-f="Film">FILM</button>
+      <button class="filter" data-f="Stage">STAGE</button>
+      <button class="filter" data-f="Music">MUSIC</button>
+      <button class="filter" data-f="Short">SHORT</button>
+      <input class="search" id="chestSearch" placeholder="Search title, role, year...">
+    </div>
+    <div class="chest" id="chest" tabindex="0"></div>
+  </div>
+</section>
+
+<!-- ============ ENCHANT / SKILLS ============ -->
+<section class="sec reveal" id="enchant" style="background:linear-gradient(#141414,#262626)">
+  <div class="sec-inner">
+    <div class="sec-title mine"><h2>✨ ENCHANTING TABLE · SKILLS</h2></div>
+    <p class="lead">Playful portfolio stats, not official metrics. Scroll here to watch the enchantments charge.</p>
+    <div class="panel" id="skills" style="max-width:840px"></div>
+  </div>
+</section>
+
+<!-- ============ FRAMES / GALLERY ============ -->
+<section class="sec reveal" id="frames" style="background:#2b1d0e">
+  <div class="sec-inner">
+    <div class="sec-title mine"><h2>🖼️ ITEM FRAMES · PHOTOS</h2></div>
+    <div class="frames" id="frameGrid"></div>
+    <p class="frames-note">Click an empty frame to upload a photo. Drag an image onto any frame to replace it. Click a filled frame to view it larger. Photos stay in your browser only.</p>
+    <input type="file" id="frameIn" accept="image/*" hidden>
+  </div>
+</section>
+
+<!-- ============ TROPHY / RECOGNITION ============ -->
+<section class="sec reveal" id="trophy" style="background:linear-gradient(#1a1a1a,#2d2d2d)">
+  <div class="sec-inner">
+    <div class="sec-title mine"><h2>🏆 TROPHY ROOM · RECOGNITION</h2></div>
+    <div class="recog">
+      <div class="panel">
+        <h4>TONY AWARD NOMINATION · 2025</h4>
+        <p>Broadway return in <i>John Proctor Is the Villain</i>, a new play by Kimberly Belflower.</p>
+        <span class="tag check">⚠ VERIFY CATEGORY</span>
+      </div>
+      <div class="panel">
+        <h4>CRITICS’ CHOICE NOMINATION · 2023</h4>
+        <p>Recognition for Ellie in A24’s <i>The Whale</i>, the film’s biggest awards push for her.</p>
+        <span class="tag check">⚠ VERIFY CATEGORY</span>
+      </div>
+      <div class="panel">
+        <h4>STRANGER THINGS · SERIES CAST</h4>
+        <p>Ensemble-driven series with a global fan base; Max’s Season 4 storyline became one of the show’s most-discussed moments.</p>
+        <span class="tag ok">✔ WIDELY REPORTED</span>
+      </div>
+    </div>
+
+    <div class="ach-head">
+      <h3 class="px" style="font-size:14px;color:var(--gold);text-shadow:3px 3px 0 #000">PLAYER ADVANCEMENTS</h3>
+      <span class="px" style="font-size:11px">UNLOCKED <span id="achCount">0</span>/8</span>
+    </div>
+    <div class="ach" id="achGrid"></div>
+  </div>
+</section>
+
+<!-- ============ CRAFT ============ -->
+<section class="sec dirt reveal" id="craft">
+  <div class="sec-inner">
+    <div class="sec-title mine"><h2>⚒️ CRAFTING TABLE · SKILL COMBOS</h2></div>
+    <p class="lead">Pick any 3 ingredients. Find the right recipe to unlock a crafted advancement.</p>
+    <div class="panel craft">
+      <div>
+        <div class="craft-grid" id="craftGrid"></div>
+        <div style="text-align:center;margin-top:16px">
+          <button class="btn sm" id="craftBtn" type="button">CLEAR GRID</button>
+        </div>
+      </div>
+      <div id="craftResult"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MAIL ============ -->
+<section class="sec reveal" id="mail" style="background:linear-gradient(#0d1b0d,#1e3a1e)">
+  <div class="sec-inner">
+    <div class="sec-title mine"><h2>✉️ MAILBOX · CONTACT</h2></div>
+    <div class="mailgrid">
+      <div class="panel info">
+        <h3 class="px" style="font-size:12px;margin-bottom:16px">ABOUT THIS BUILD</h3>
+        <p>📍 Born: Brenham, Texas</p>
+        <p>🎬 Agency and official contact: check her official pages</p>
+        <p>📸 Socials: verify official handles before sharing</p>
+        <p style="margin-top:20px">
+          <a class="btn sm" href="https://en.wikipedia.org/wiki/Sadie_Sink" target="_blank" rel="noopener">📖 Wikipedia</a>
+          <a class="btn sm" href="https://www.imdb.com/find/?q=Sadie%20Sink" target="_blank" rel="noopener">🎬 IMDb</a>
+        </p>
+      </div>
+      <form class="panel" id="mailForm">
+        <h3 class="px" style="font-size:12px;margin-bottom:12px">SEND A LETTER</h3>
+        <input class="field" id="mName" placeholder="Your name / gamertag" required>
+        <input class="field" id="mEmail" type="email" placeholder="Your email" required>
+        <textarea class="field" id="mMsg" placeholder="Write something kind..." required></textarea>
+        <button class="btn g" type="submit">📤 SEND</button>
+        <p style="font-size:19px;color:#555;margin:14px 0 0">Opens your email app with the message ready to send.</p>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="px">⛏ SADIE SINK · MINECRAFT PORTFOLIO ⛏</div>
+  <p>Fan-made tribute. Not affiliated with Sadie Sink, Netflix, Marvel, A24, Mojang, or any production. Facts from public sources; verify before publishing. Photos belong to their creators; use only images you have rights to.</p>
+</footer>
+
+<!-- MODAL -->
+<div id="modal">
+  <div class="mbox">
+    <div class="mhead"><span id="mTitle">ITEM</span><button id="mClose" type="button">✕</button></div>
+    <div class="mbody" id="mBody"></div>
+  </div>
+</div>
+
+<script>
+/* ================= HELPERS ================= */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const rnd = (a,b) => a + Math.random()*(b-a);
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const store = {
+  get(k,d){ try{ const v = localStorage.getItem('ss_'+k); return v===null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem('ss_'+k, JSON.stringify(v)); }catch(e){} }
+};
+const CONTACT_EMAIL = 'your-email@example.com'; // replace with the address you want messages sent to
+
+/* ================= STATE ================= */
+let xp = store.get('xp', 0);
+let ach = store.get('ach', []);
+let factsFound = store.get('facts', []);
+let minedTotal = store.get('mined', 0);
+let chestSeen = store.get('chest', []);
+let chaptersRead = store.get('chapters', []);
+let soundOn = store.get('sound', true);
+let rainOn = false, timeOverride = null, fpsCount = 0, fps = 0, frame = 0;
+let curFilter = 'all', curQ = '', sel = [], lastCraftKey = '';
+
+/* ================= AUDIO ================= */
+let actx = null;
+function tone(f, d=.08, type='square', v=.05, when=0){
+  const o = actx.createOscillator(), gn = actx.createGain();
+  o.type = type; o.frequency.value = f; gn.gain.value = v;
+  o.connect(gn); gn.connect(actx.destination);
+  const t = actx.currentTime + when;
+  o.start(t); gn.gain.exponentialRampToValueAtTime(.0001, t+d); o.stop(t+d+.02);
+}
+function sfx(kind){
+  if(!soundOn) return;
+  try{
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    if(kind==='click') tone(440,.04);
+    else if(kind==='mine'){ tone(180,.08,'square',.06); tone(120,.1,'sawtooth',.05,.03); }
+    else if(kind==='pop'){ tone(600,.06); tone(900,.08,'square',.05,.06); }
+    else if(kind==='level'){ [523,659,784,1046].forEach((f,i)=>tone(f,.15,'square',.05,i*.1)); }
+    else if(kind==='toast') tone(988,.1,'triangle',.05);
+    else if(kind==='low') tone(90,.4,'sawtooth',.06);
+  }catch(e){}
+}
+
+/* ================= TOASTS ================= */
+function toast(icon, title, msg){
+  const d = document.createElement('div');
+  d.className = 'toast';
+  d.innerHTML = `<div class="ti">${icon}</div><div><b>${title}</b><span>${msg}</span></div>`;
+  $('#toasts').appendChild(d);
+  sfx('toast');
+  setTimeout(() => { d.classList.add('out'); setTimeout(() => d.remove(), 450); }, 3800);
+}
+
+/* ================= XP ================= */
+const lvl = () => Math.floor(xp/100) + 1;
+function renderXP(){
+  $('#lvl').textContent = lvl();
+  $('#xpTxt').textContent = (xp%100) + ' / 100 XP';
+  $('#xpBar').style.width = (xp%100) + '%';
+}
+function addXP(n){
+  const before = lvl();
+  xp += n; store.set('xp', xp); renderXP();
+  if(lvl() > before){ sfx('level'); toast('⭐', 'LEVEL UP!', 'You reached level ' + lvl()); }
+}
+
+/* ================= ACHIEVEMENTS ================= */
+const ACH = [
+  {id:'hello', icon:'🏠', name:'Hello, Hawkins', desc:'Leave the spawn area and explore the world.'},
+  {id:'mine', icon:'⛏️', name:'Hole Digger', desc:'Mine 10 blocks of ground.'},
+  {id:'chest', icon:'📦', name:'Chest Looter', desc:'Open 3 filmography items.'},
+  {id:'upside', icon:'🌀', name:'Upside Down', desc:'Enter the Upside Down (press U).'},
+  {id:'craft', icon:'⚒️', name:'Master Performance', desc:'Craft a real recipe at the table.'},
+  {id:'lore', icon:'📖', name:'Full Lore', desc:'Read all four chapters of the lore book.'},
+  {id:'facts', icon:'📜', name:'Fact Finder', desc:'Find 5 facts by mining.'},
+  {id:'mail', icon:'✉️', name:'Dear Max', desc:'Write to the mailbox.'}
+];
+function unlock(id){
+  if(ach.includes(id)) return;
+  ach.push(id); store.set('ach', ach);
+  const a = ACH.find(x => x.id === id);
+  toast(a.icon, 'ADVANCEMENT MADE!', a.name);
+  addXP(25); renderAch();
+}
+function renderAch(){
+  $('#achGrid').innerHTML = ACH.map(a => {
+    const got = ach.includes(a.id);
+    return `<div class="ach-card ${got?'got':'locked'}"><div class="i">${got?a.icon:'❔'}</div><div><h6>${a.name}</h6><p>${a.desc}</p></div></div>`;
+  }).join('');
+  $('#achCount').textContent = ach.length;
+}
+
+/* ================= WORLD (CANVAS) ================= */
+const cv = $('#world'), g = cv.getContext('2d');
+g.imageSmoothingEnabled = false;
+const W = 240; let H = 135;
+const SKY_D = [[106,176,255],[190,226,255]];
+const SKY_N = [[8,12,36],[28,38,80]];
+const mix = (a,b,t) => a.map((v,i) => v + (b[i]-v)*t);
+const rgb = c => `rgb(${c[0]|0},${c[1]|0},${c[2]|0})`;
+const hash = (x,y) => { let n = Math.imul(x,73856093) ^ Math.imul(y,19349663); n = Math.imul(n ^ (n>>>13), 1274126177); return ((n>>>0) % 1000) / 1000; };
+let base = [], terrain = [], trees = [], clouds = [], stars = [], drops = [];
+const bg = document.createElement('canvas'), bgg = bg.getContext('2d');
+
+function resizeWorld(){
+  const r = cv.getBoundingClientRect();
+  if(!r.width || !r.height) return;
+  H = Math.round(clamp(W * r.height / r.width, 120, 200));
+  cv.width = W; cv.height = H; bg.width = W; bg.height = H;
+  genWorld();
+}
+function genWorld(){
+  const s = Math.random()*10;
+  base = [];
+  for(let x=0;x<W;x++) base[x] = Math.round(H*.68 + Math.sin(x*.045+s)*H*.05 + Math.sin(x*.13+s*2)*H*.02);
+  terrain = base.slice();
+  trees = Array.from({length:11}, () => ({ x: Math.floor(rnd(6, W-6)), h: Math.floor(rnd(6,10)) }));
+  clouds = Array.from({length:7}, () => ({ x:rnd(0,W), y:rnd(H*.08,H*.32), w:Math.floor(rnd(16,34)), s:rnd(.05,.16) }));
+  stars = Array.from({length:70}, () => ({ x:Math.random()*W, y:Math.random()*H*.6, a:Math.random() }));
+  drops = Array.from({length:90}, () => ({ x:Math.random()*W, y:Math.random()*H, v:rnd(1.5,3) }));
+  buildBG();
+}
+function buildBG(){
+  bgg.clearRect(0,0,W,H);
+  for(let x=0;x<W;x++){
+    const top = terrain[x];
+    for(let y=top; y<H; y++){
+      const d = y - top, n = hash(x,y);
+      let c;
+      if(d === 0) c = n < .5 ? '#5EBC2E' : '#4fae22';
+      else if(d < 3) c = n < .5 ? '#79553A' : '#6b4a31';
+      else if(n > .97) c = '#2e2e2e';
+      else c = n < .2 ? '#6f6f6f' : (n < .4 ? '#8a8a8a' : '#7a7a7a');
+      bgg.fillStyle = c; bgg.fillRect(x,y,1,1);
+    }
+  }
+}
+function timeInfo(){
+  if(timeOverride !== null) return timeOverride;
+  const p = new Intl.DateTimeFormat('en-US',{timeZone:'America/Chicago',hour:'numeric',minute:'numeric',hourCycle:'h23'}).formatToParts(new Date());
+  const h = +p.find(x => x.type==='hour').value % 24;
+  const m = +p.find(x => x.type==='minute').value;
+  return (h + m/60) / 24;
+}
+function orb(x,y,color,r){
+  g.fillStyle = color;
+  const cx = Math.round(x), cy = Math.round(y);
+  for(let dx=-r;dx<=r;dx++) for(let dy=-r;dy<=r;dy++) if(dx*dx+dy*dy <= r*r) g.fillRect(cx+dx, cy+dy, 1, 1);
+}
+function drawWorld(){
+  frame++; fpsCount++;
+  const t = timeInfo();
+  const ph = (t - .25) * Math.PI * 2;
+  const day = clamp(Math.sin(ph)*4 + .5, 0, 1);
+
+  const grd = g.createLinearGradient(0,0,0,H);
+  grd.addColorStop(0, rgb(mix(SKY_N[0], SKY_D[0], day)));
+  grd.addColorStop(1, rgb(mix(SKY_N[1], SKY_D[1], day)));
+  g.fillStyle = grd; g.fillRect(0,0,W,H);
+
+  if(day < .95){
+    for(const s of stars){
+      g.globalAlpha = (1-day) * (.5 + .5*Math.sin(frame*.04 + s.a*20));
+      g.fillStyle = '#fff'; g.fillRect(s.x|0, s.y|0, 1, 1);
+    }
+    g.globalAlpha = 1;
+  }
+
+  const sx = W/2 - Math.cos(ph)*W*.42, sy = H*.72 - Math.sin(ph)*H*.62;
+  const mx = W/2 + Math.cos(ph)*W*.42, my = H*.72 + Math.sin(ph)*H*.62;
+  g.globalAlpha = clamp(day*2, 0, 1); orb(sx, sy, '#FFF3A0', 5);
+  g.globalAlpha = clamp((1-day)*2, 0, 1); orb(mx, my, '#E6ECFF', 4);
+  g.globalAlpha = 1;
+
+  g.fillStyle = `rgba(255,255,255,${.35 + .45*day})`;
+  for(const c of clouds){
+    c.x += c.s * (rainOn ? .4 : 1);
+    if(c.x > W + c.w) c.x = -c.w - 2;
+    g.fillRect(c.x|0, c.y|0, c.w, 3);
+    g.fillRect((c.x+4)|0, (c.y-2)|0, Math.max(1,c.w-8), 2);
+  }
+
+  g.fillStyle = rgb(mix([40,60,90],[120,176,120],day));
+  for(let x=0;x<W;x++){
+    const off = frame*.005;
+    const hh = H*.56 + Math.sin((x+off)*.035)*H*.05 + Math.sin((x+off)*.09)*H*.02;
+    g.fillRect(x, hh|0, 1, H);
+  }
+
+  g.drawImage(bg, 0, 0);
+
+  for(const tr of trees){
+    const x = tr.x, gy = terrain[x];
+    if(gy === undefined) continue;
+    g.fillStyle = '#5b3b1d';
+    for(let k=1;k<=tr.h;k++) g.fillRect(x, gy-k, 1, 1);
+    const cy = gy - tr.h - 2;
+    for(let dy=-3;dy<=2;dy++) for(let dx=-3;dx<=3;dx++){
+      if(Math.abs(dx)+Math.abs(dy) > 4) continue;
+      g.fillStyle = hash(x+dx, cy+dy) < .5 ? '#2f7a1c' : '#3f9a2a';
+      g.fillRect(x+dx, cy+dy, 1, 1);
+    }
+  }
+
+  g.fillStyle = `rgba(4,8,30,${(1-day)*.35})`;
+  g.fillRect(0,0,W,H);
+
+  if(rainOn){
+    g.fillStyle = 'rgba(190,215,255,.55)';
+    for(const d of drops){
+      g.fillRect(d.x|0, d.y|0, 1, 3);
+      d.y += d.v*1.8; d.x -= .4;
+      if(d.y > H){ d.y = -3; d.x = Math.random()*W; }
+      if(d.x < 0) d.x = W-1;
+    }
+  }
+  requestAnimationFrame(drawWorld);
+}
+
+/* MINING */
+cv.addEventListener('pointerdown', e => {
+  const r = cv.getBoundingClientRect();
+  const px = Math.floor((e.clientX - r.left) / r.width * W);
+  const py = Math.floor((e.clientY - r.top) / r.height * H);
+  if(px < 0 || px >= W) return;
+  const top = terrain[px];
+  if(py < top - 2 || py > top + 3) return;
+  if(top >= H - 6) return;
+  terrain[px]++;
+  buildBG();
+  sfx('mine');
+  burst(e.clientX, e.clientY, ['#5EBC2E','#79553A','#8a8a8a','#FFEB3B'], 12);
+  addXP(2);
+  minedTotal++; store.set('mined', minedTotal);
+  if(minedTotal >= 10) unlock('mine');
+  if(Math.random() < .12) foundFact();
+});
+// slowly regrow mined ground
+setInterval(() => {
+  let changed = false;
+  for(let x=0;x<W;x++){
+    if(terrain[x] > base[x]){ terrain[x]--; changed = true; }
+  }
+  if(changed) buildBG();
+}, 3000);
+
+/* ================= PARTICLES ================= */
+const fx = $('#fx'), fxg = fx.getContext('2d');
+let parts = [], fxRun = false;
+function resizeFx(){ fx.width = innerWidth; fx.height = innerHeight; }
+resizeFx(); addEventListener('resize', resizeFx);
+function burst(x, y, cols, n=14){
+  for(let i=0;i<n;i++) parts.push({x, y, vx:rnd(-3,3), vy:rnd(-6,-1), life:rnd(30,50), s:Math.round(rnd(4,8)), c:cols[(Math.random()*cols.length)|0]});
+  if(!fxRun){ fxRun = true; requestAnimationFrame(fxLoop); }
+}
+function fxLoop(){
+  fxg.clearRect(0,0,fx.width,fx.height);
+  parts = parts.filter(p => p.life > 0);
+  for(const p of parts){
+    p.vy += .35; p.x += p.vx; p.y += p.vy; p.life--;
+    fxg.globalAlpha = Math.max(0, p.life/50);
+    fxg.fillStyle = p.c;
+    fxg.fillRect(Math.round(p.x), Math.round(p.y), p.s, p.s);
+  }
+  fxg.globalAlpha = 1;
+  if(parts.length) requestAnimationFrame(fxLoop); else fxRun = false;
+}
+document.addEventListener('pointerdown', e => {
+  if(e.target.closest('.mine')) burst(e.clientX, e.clientY, ['#5EBC2E','#79553A','#8a8a8a','#FFEB3B'], 10);
+});
+
+/* ================= FACTS ================= */
+const FACTS = [
+  'Sadie Elizabeth Sink was born April 16, 2002, in Brenham, Texas.',
+  'As a child she was cast as Annie on Broadway (2012–2014).',
+  'She played the young Queen Elizabeth II in The Audience (2015), opposite Dame Helen Mirren.',
+  'She joined Stranger Things in Season 2 as Max Mayfield (2017).',
+  'She played Ziggy Berman in the Netflix Fear Street trilogy (2021).',
+  'She co-starred with Dylan O’Brien in the short film All Too Well (2021).',
+  'She played Ellie opposite Brendan Fraser in A24’s The Whale (2022).',
+  'She is cast in Marvel Studios’ Spider-Man: Brand New Day, due July 31, 2026.'
+];
+function foundFact(){
+  const i = Math.floor(Math.random()*FACTS.length);
+  if(!factsFound.includes(i)){ factsFound.push(i); store.set('facts', factsFound); }
+  toast('📜', `FACT ${factsFound.length}/${FACTS.length}`, FACTS[i]);
+  addXP(5);
+  if(factsFound.length >= 5) unlock('facts');
+}
+
+/* ================= HERO TYPER ================= */
+const LINES = ['Actress.','Broadway veteran.','Max Mayfield, Hawkins.','Scream queen.','Singer & guitarist.','Spider-Man: Brand New Day (2026).'];
+async function typer(){
+  const tt = $('#tt'); let i = 0;
+  for(;;){
+    const line = LINES[i % LINES.length];
+    for(let c=0;c<=line.length;c++){ tt.textContent = line.slice(0,c); await sleep(65); }
+    await sleep(1500);
+    for(let c=line.length;c>=0;c--){ tt.textContent = line.slice(0,c); await sleep(30); }
+    await sleep(300); i++;
+  }
+}
+
+/* ================= PHOTO ================= */
+function setPhoto(src, credit){
+  const img = $('#photo');
+  img.onerror = () => { img.hidden = true; $('#ph').hidden = false; };
+  img.onload = () => { $('#ph').hidden = true; img.hidden = false; };
+  img.src = src;
+  $('#credit').textContent = credit;
+}
+async function loadWiki(){
+  try{
+    const r = await fetch('https://en.wikipedia.org/api/rest_v1/page/summary/Sadie_Sink');
+    if(!r.ok) throw new Error('wiki');
+    const j = await r.json();
+    if(j.extract) $('#wikiBlurb').textContent = j.extract;
+    const src = (j.originalimage || j.thumbnail || {}).source;
+    if(src) setPhoto(src, 'Photo: Wikipedia · check the file’s license · upload your own anytime');
+  }catch(e){
+    $('#wikiBlurb').textContent = 'Live Wikipedia bio unavailable right now. Built-in lore below still works.';
+  }
+}
+$('#uploadBtn').addEventListener('click', () => $('#fileIn').click());
+$('#fileIn').addEventListener('change', e => {
+  const f = e.target.files[0];
+  if(f && f.type.startsWith('image/')){
+    setPhoto(URL.createObjectURL(f), 'Your photo · stays on this device');
+    toast('📷', 'SKIN UPDATED', 'Your photo is now the player skin.');
+    addXP(5);
+  }
+});
+
+/* ================= LORE BOOK ================= */
+const CHAPTERS = [
+  {t:'I · Brenham', h:'Early Life', html:`
+    <p>Sadie Elizabeth Sink was born on <b>April 16, 2002</b>, in <b>Brenham, Texas</b>. Long before anyone called her a scream queen, she was a kid with a big imagination and a stage in her head.</p>
+    <p>Her early interest in performing pointed her toward musical theatre, the path that would take her from a small Texas town to the lights of Broadway.</p>`},
+  {t:'II · Broadway', h:'The Kid on Stage', html:`
+    <p>At <b>10</b>, she was cast as <b>Annie</b> in the Broadway production of <i>Annie</i> at the Palace Theatre, a role she played from <b>2012 to 2014</b>.</p>
+    <p>In 2015 she played the young <b>Queen Elizabeth II</b> in Peter Morgan’s <i>The Audience</i>, sharing the stage with <b>Dame Helen Mirren</b>, who played the monarch in later years.</p>`},
+  {t:'III · Hawkins', h:'Max Mayfield', html:`
+    <p>In 2017 she joined Netflix’s <i>Stranger Things</i> for Season 2 as <b>Max Mayfield</b>, a sharp, skateboarding newcomer who became one of the show’s most beloved characters.</p>
+    <p>Max’s story carried through Season 5. Her Season 4 storyline, including the scene set to Kate Bush’s <i>“Running Up That Hill”</i>, became one of the most talked-about moments of the series.</p>
+    <p>Around the same time she played young <b>Lori Walls</b> in <i>The Glass Castle</i>.</p>`},
+  {t:'IV · Beyond', h:'Horror, Music & Marvel', html:`
+    <p>In 2021 she starred in the <i>Fear Street</i> trilogy as <b>Ziggy Berman</b>, and appeared in the short film <i>All Too Well</i>, opposite Dylan O’Brien.</p>
+    <p>In 2022 she starred in A24’s <i>The Whale</i>, directed by Darren Aronofsky, opposite Brendan Fraser, and earned awards attention for her performance.</p>
+    <p>She then headlined the musical <i>O’Dessa</i> (2025), returned to Broadway in <i>John Proctor Is the Villain</i>, and was cast in Marvel Studios’ <i>Spider-Man: Brand New Day</i>, due <b>July 31, 2026</b>.</p>`}
+];
+function renderBook(i=0){
+  $('#bookTabs').innerHTML = CHAPTERS.map((c,k) => `<button class="book-tab ${k===i?'on':''}" data-k="${k}" type="button">${c.t}</button>`).join('');
+  const page = $('#bookPage');
+  page.innerHTML = `<h3 class="px">${CHAPTERS[i].h}</h3>${CHAPTERS[i].html}`;
+  page.classList.remove('flip'); void page.offsetWidth; page.classList.add('flip');
+  if(!chaptersRead.includes(i)){
+    chaptersRead.push(i); store.set('chapters', chaptersRead);
+    if(chaptersRead.length === CHAPTERS.length) unlock('lore');
+  }
+}
+$('#bookTabs').addEventListener('click', e => {
+  const b = e.target.closest('.book-tab'); if(!b) return;
+  sfx('click'); renderBook(+b.dataset.k);
+});
+
+/* ================= ADVANCEMENT TREE ================= */
+const ADV = [
+  {y:'2012', i:'🎤', t:'Annie on Broadway', d:'Cast as Annie at the Palace Theatre at age 10. Held the role through 2014.', s:1},
+  {y:'2015', i:'👑', t:'The Audience', d:'Played the young Queen Elizabeth II opposite Dame Helen Mirren.', s:1},
+  {y:'2017', i:'🏜️', t:'The Glass Castle', d:'Played young Lori Walls in the adaptation of Jeannette Walls’ memoir.', s:1},
+  {y:'2017', i:'🚲', t:'Stranger Things · Max Arrives', d:'Joined Season 2 as Max Mayfield. The role became her breakthrough.', s:1},
+  {y:'2021', i:'🔪', t:'Fear Street Trilogy', d:'Played Ziggy Berman across the Netflix horror trilogy.', s:1},
+  {y:'2021', i:'🧣', t:'All Too Well: The Short Film', d:'Co-starred with Dylan O’Brien in Taylor Swift’s short film.', s:1},
+  {y:'2022', i:'🐋', t:'The Whale', d:'Played Ellie opposite Brendan Fraser in Darren Aronofsky’s A24 drama.', s:1},
+  {y:'2022', i:'🎶', t:'“Running Up That Hill”', d:'Max’s Season 4 storyline became one of the series’ most-discussed moments.', s:1},
+  {y:'2025', i:'🎸', t:"O'Dessa", d:'Headlined the musical film, singing and playing guitar.', s:1},
+  {y:'2025', i:'🎭', t:'John Proctor Is the Villain', d:'Broadway return in Kimberly Belflower’s play.', s:1},
+  {y:'2025', i:'📺', t:'Stranger Things 5', d:'The final season, closing out Max’s story.', s:1},
+  {y:'2026', i:'🕷️', t:'Spider-Man: Brand New Day', d:'Marvel Studios film due July 31, 2026. Her role is under wraps.', s:0}
+];
+$('#tree').innerHTML = ADV.map((a,k) => `
+  <div class="adv ${a.s?'done':'locked'} reveal" data-k="${k}">
+    <div class="ic">${a.i}</div>
+    <div>
+      <div class="year">${a.y}${a.s?'':' · LOCKED'}</div>
+      <h4>${a.t}</h4>
+      <p>${a.s ? a.d : 'Role details are under wraps until release.'}</p>
+    </div>
+  </div>`).join('');
+$('#tree').addEventListener('click', e => {
+  const a = e.target.closest('.adv'); if(!a) return;
+  a.classList.toggle('open'); sfx('pop');
+});
+
+/* ================= FILMOGRAPHY CHEST ================= */
+const RC = {common:'#dddddd', uncommon:'#55ff55', rare:'#55ffff', epic:'#ff55ff', legendary:'#ffaa00', mythic:'#ff5555'};
+const WORKS = [
+  {icon:'🚲', title:'Stranger Things', year:'2017–2025', type:'TV', role:'Max Mayfield', rarity:'legendary',
+   desc:'Her breakthrough. Max arrives in Season 2 as a sharp, skateboarding newcomer, and her arc runs through Season 5. Her Season 4 storyline became one of the show’s most-discussed moments.'},
+  {icon:'🐋', title:'The Whale', year:'2022', type:'Film', role:'Ellie', rarity:'epic',
+   desc:'A24 drama directed by Darren Aronofsky, opposite Brendan Fraser. Her performance earned awards attention.'},
+  {icon:'🔪', title:'Fear Street Trilogy', year:'2021', type:'Film', role:'Ziggy Berman', rarity:'epic',
+   desc:'Netflix horror trilogy shot back to back. Ziggy is a fan-favorite role in her scream-queen run.'},
+  {icon:'🧣', title:'All Too Well: The Short Film', year:'2021', type:'Short', role:'Her', rarity:'rare',
+   desc:'Taylor Swift’s short film, co-starring Dylan O’Brien. Sadie plays the younger version of the story’s central character.'},
+  {icon:'🎸', title:"O'Dessa", year:'2025', type:'Music', role:"O'Dessa", rarity:'epic',
+   desc:'Musical film in which she sings and performs original songs, including on guitar.'},
+  {icon:'🎭', title:'John Proctor Is the Villain', year:'2025', type:'Stage', role:'Shelby', rarity:'legendary',
+   desc:'Broadway return in Kimberly Belflower’s play about a high-school reckoning. Recognized with a 2025 Tony nomination (verify category).'},
+  {icon:'🎈', title:'Annie', year:'2012–2014', type:'Stage', role:'Annie', rarity:'legendary',
+   desc:'Her Broadway debut, at age 10, in the title role at the Palace Theatre.'},
+  {icon:'👑', title:'The Audience', year:'2015', type:'Stage', role:'Young Elizabeth II', rarity:'epic',
+   desc:'Peter Morgan’s play about the Queen’s weekly audiences with prime ministers. She played the young queen opposite Dame Helen Mirren.'},
+  {icon:'🏜️', title:'The Glass Castle', year:'2017', type:'Film', role:'Young Lori Walls', rarity:'rare',
+   desc:'Drama adapted from Jeannette Walls’ memoir, co-starring Brie Larson and Woody Harrelson.'},
+  {icon:'📺', title:'Blue Bloods & The Americans', year:'Early TV', type:'TV', role:'Guest roles', rarity:'common',
+   desc:'Early television guest appearances. Check IMDb for exact episodes before citing.'},
+  {icon:'🕷️', title:'Spider-Man: Brand New Day', year:'2026', type:'Film', role:'Under wraps', rarity:'mythic',
+   desc:'Marvel Studios film with Tom Holland, due July 31, 2026. Her character has not been officially revealed, so this entry stays locked.'}
+];
+function renderChest(){
+  const list = WORKS.map((w,i) => ({w,i})).filter(({w}) =>
+    (curFilter === 'all' || w.type === curFilter) &&
+    `${w.title} ${w.role} ${w.type} ${w.year}`.toLowerCase().includes(curQ)
+  );
+  $('#chest').innerHTML = list.length
+    ? list.map(({w,i}) => `
+        <div class="item" tabindex="0" data-i="${i}" style="--rc:${RC[w.rarity]}">
+          <span class="rar">${w.rarity}</span>
+          <div class="big">${w.icon}</div>
+          <h5>${w.title}</h5>
+          <div class="meta">${w.year} · ${w.type}</div>
+        </div>`).join('')
+    : '<p class="px" style="font-size:12px;grid-column:1/-1">EMPTY CHEST · TRY ANOTHER FILTER</p>';
+}
+$('#toolbar').addEventListener('click', e => {
+  const b = e.target.closest('.filter'); if(!b) return;
+  $$('.filter').forEach(x => x.classList.remove('on'));
+  b.classList.add('on'); curFilter = b.dataset.f; sfx('click'); renderChest();
+});
+$('#chestSearch').addEventListener('input', e => { curQ = e.target.value.trim().toLowerCase(); renderChest(); });
+function openWork(w){
+  if(!chestSeen.includes(w.title)){
+    chestSeen.push(w.title); store.set('chest', chestSeen);
+    if(chestSeen.length >= 3) unlock('chest');
+  }
+  sfx('pop');
+  openModal(`${w.icon} ${w.title.toUpperCase()}`, `
+    <div class="big">${w.icon}</div>
+    <dl>
+      <dt>ROLE</dt><dd>${w.role}</dd>
+      <dt>YEAR</dt><dd>${w.year}</dd>
+      <dt>TYPE</dt><dd>${w.type}</dd>
+      <dt>RARITY</dt><dd style="color:${RC[w.rarity]};text-shadow:1px 1px 0 #000">${w.rarity.toUpperCase()}</dd>
+    </dl>
+    <p style="font-size:24px;line-height:1.4">${w.desc}</p>
+    <a class="btn sm" href="https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(w.title)}" target="_blank" rel="noopener">📖 Read on Wikipedia</a>`);
+}
+$('#chest').addEventListener('click', e => {
+  const it = e.target.closest('.item'); if(it) openWork(WORKS[+it.dataset.i]);
+});
+$('#chest').addEventListener('keydown', e => {
+  if(e.key !== 'Enter') return;
+  const it = e.target.closest('.item'); if(it) openWork(WORKS[+it.dataset.i]);
+});
+
+/* ================= MODAL ================= */
+function openModal(title, html){
+  $('#mTitle').textContent = title;
+  $('#mBody').innerHTML = html;
+  $('#modal').classList.add('open');
+  document.body.classList.add('locked');
+}
+function closeModal(){
+  $('#modal').classList.remove('open');
+  document.body.classList.remove('locked');
+}
+$('#mClose').addEventListener('click', () => { sfx('click'); closeModal(); });
+$('#modal').addEventListener('click', e => { if(e.target.id === 'modal') closeModal(); });
+
+/* ================= ENCHANT / SKILLS ================= */
+const SKILLS = [
+  ['Dramatic Range', 97],
+  ['Stage Musicals', 95],
+  ['Scream Queen Endurance', 96],
+  ['Guitar & Vocals (O’Dessa)', 82],
+  ['Skateboarding (Max)', 78],
+  ['Upside Down Survival', 99]
+];
+$('#skills').innerHTML = SKILLS.map(([n,v]) => `
+  <div class="skill">
+    <div class="row"><span>${n}</span><span>LV ${v}</span></div>
+    <div class="bar2"><i data-w="${v}"></i></div>
+  </div>`).join('');
+
+/* ================= FRAMES ================= */
+const FRAMES = [
+  {cap:'2012 · Annie (Broadway)'},
+  {cap:'2015 · The Audience'},
+  {cap:'2017 · Hawkins, Season 2'},
+  {cap:'2021 · Fear Street'},
+  {cap:'2022 · The Whale'},
+  {cap:'2025 · O’Dessa'}
+];
+const frameUrls = new Array(FRAMES.length).fill(null);
+function renderFrames(){
+  $('#frameGrid').innerHTML = FRAMES.map((f,k) => `
+    <div class="frame mine" data-k="${k}" tabindex="0">
+      <div class="pic" style="${frameUrls[k] ? `background-image:url('${frameUrls[k]}')` : ''}">
+        ${frameUrls[k] ? '' : '📷 Click or drop<br>a photo here'}
+      </div>
+      <div class="cap">${f.cap}</div>
+    </div>`).join('');
+}
+function setFrame(k, file){
+  if(frameUrls[k]) URL.revokeObjectURL(frameUrls[k]);
+  frameUrls[k] = URL.createObjectURL(file);
+  renderFrames();
+  toast('🖼️', 'ITEM FRAME FILLED', FRAMES[k].cap);
+  addXP(5);
+}
+let frameTarget = null;
+$('#frameGrid').addEventListener('click', e => {
+  const fr = e.target.closest('.frame'); if(!fr) return;
+  const k = +fr.dataset.k;
+  if(frameUrls[k]){
+    openModal(FRAMES[k].cap, `<img src="${frameUrls[k]}" alt="${FRAMES[k].cap}">`);
+  }else{
+    frameTarget = k; $('#frameIn').click();
+  }
+});
+$('#frameIn').addEventListener('change', e => {
+  const f = e.target.files[0];
+  if(f && frameTarget !== null && f.type.startsWith('image/')) setFrame(frameTarget, f);
+  e.target.value = ''; frameTarget = null;
+});
+const fg = $('#frameGrid');
+fg.addEventListener('dragover', e => {
+  e.preventDefault();
+  const fr = e.target.closest('.frame'); $$('.frame').forEach(x => x.classList.remove('drag'));
+  if(fr) fr.classList.add('drag');
+});
+fg.addEventListener('dragleave', () => $$('.frame').forEach(x => x.classList.remove('drag')));
+fg.addEventListener('drop', e => {
+  e.preventDefault();
+  $$('.frame').forEach(x => x.classList.remove('drag'));
+  const fr = e.target.closest('.frame');
+  const f = e.dataTransfer.files[0];
+  if(fr && f && f.type.startsWith('image/')) setFrame(+fr.dataset.k, f);
+});
+
+/* ================= CRAFTING ================= */
+const CRAFT = ['🎭','🎸','🛹','😱','👑','🎬','🌀','🎤','🕷️'];
+const RECIPES = [
+  {need:['🎭','🎸','🛹'], name:"O'DESSA ROCKSTAR", text:'Stage + guitar + skate = a rock-opera hero.'},
+  {need:['😱','🎬','🌀'], name:'SCREAM QUEEN ARMOR', text:'Horror + screen + Upside Down = a Hawkins survivor.'},
+  {need:['👑','🎭','🎤'], name:'BROADWAY CROWN', text:'Royalty + stage + mic = a Tony-level enchantment.'},
+  {need:['🕷️','🛹','🎬'], name:'NEIGHBORHOOD SET', text:'Spider + skate + screen = Brand New Day loading...'}
+];
+function renderCraft(){
+  $('#craftGrid').innerHTML = CRAFT.map(c => `<div class="cslot ${sel.includes(c)?'sel':''}" data-c="${c}">${c}</div>`).join('');
+  evalCraft();
+}
+function evalCraft(){
+  const res = $('#craftResult');
+  if(sel.length < 3){
+    res.innerHTML = `<div>${sel.length ? sel.join(' + ') : 'Empty table'}<br><small>Pick ${3 - sel.length} more ingredient${3-sel.length===1?'':'s'}</small></div>`;
+    lastCraftKey = ''; return;
+  }
+  const key = [...sel].sort().join('');
+  const hit = RECIPES.find(r => [...r.need].sort().join('') === key);
+  if(hit){
+    res.innerHTML = `<div><b class="px" style="font-size:12px;color:var(--gold)">${hit.name}</b><br><br>${hit.text}</div>`;
+    if(lastCraftKey !== key){
+      lastCraftKey = key;
+      sfx('level'); unlock('craft'); addXP(15);
+    }
+  }else{
+    res.innerHTML = `<div><b class="px" style="font-size:12px">MYSTERY BREW</b><br><br>Versatility +100. Try a recipe combo!</div>`;
+    lastCraftKey = '';
+  }
+}
+$('#craftGrid').addEventListener('click', e => {
+  const s = e.target.closest('.cslot'); if(!s) return;
+  const c = s.dataset.c;
+  if(sel.includes(c)) sel = sel.filter(x => x !== c);
+  else { if(sel.length >= 3) sel.shift(); sel.push(c); }
+  sfx('click'); renderCraft();
+});
+$('#craftBtn').addEventListener('click', () => { sel = []; sfx('click'); renderCraft(); });
+
+/* ================= MAILBOX ================= */
+$('#mailForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const n = $('#mName').value.trim();
+  const em = $('#mEmail').value.trim();
+  const msg = $('#mMsg').value.trim();
+  const subject = encodeURIComponent('Portfolio message from ' + n);
+  const body = encodeURIComponent(`${msg}\n\n— ${n} (${em})`);
+  sfx('pop');
+  toast('✉️', 'LETTER READY', 'Your email app should open with your message.');
+  unlock('mail');
+  location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+  e.target.reset();
+});
+
+/* ================= HUD / CLOCK / DEBUG ================= */
+function texasTime(){
+  return new Intl.DateTimeFormat('en-US',{timeZone:'America/Chicago',hour:'numeric',minute:'2-digit'}).format(new Date());
+}
+function updateHUD(){
+  $('#clock').textContent = texasTime() + ' CT';
+  if(document.body.classList.contains('f3')){
+    const t = timeInfo();
+    $('#debug').textContent =
+`SADIE SINK · FAN BUILD
+Position: Brenham, TX (30.17°N, 96.40°W)
+Local time: ${texasTime()} CT
+Daylight: ${(clamp(Math.sin((t-.25)*Math.PI*2)*4+.5,0,1)*100).toFixed(0)}%
+Rain: ${rainOn ? 'on' : 'off'} · Night override: ${timeOverride===null?'real time':'forced'}
+FPS: ${fps}
+Level: ${lvl()} · XP: ${xp}
+Mined: ${minedTotal} · Facts: ${factsFound.length}/${FACTS.length}
+Advancements: ${ach.length}/${ACH.length}`;
+  }
+}
+setInterval(() => { fps = fpsCount; fpsCount = 0; }, 1000);
+setInterval(updateHUD, 500);
+
+function toggleUpside(force){
+  const on = force ?? !document.body.classList.contains('upside');
+  document.body.classList.toggle('upside', on);
+  $('#btnUp').style.borderColor = on ? '#ff4040' : '';
+  $('.hearts').classList.remove('shake'); void $('.hearts').offsetWidth; $('.hearts').classList.add('shake');
+  sfx(on ? 'low' : 'pop');
+  toast('🌀', on ? 'UPSIDE DOWN' : 'BACK TO HAWKINS', on ? 'Something is watching. Stay close to the light.' : 'The gate is closed for now.');
+  if(on) unlock('upside');
+}
+function toggleRain(){
+  rainOn = !rainOn;
+  $('#btnRain').style.borderColor = rainOn ? '#55ffff' : '';
+  sfx('pop'); toast('🌧️', rainOn ? 'RAIN' : 'CLEAR SKY', rainOn ? 'Weather changed. Clouds are moving faster.' : 'The sky is clear again.');
+}
+function cycleNight(){
+  if(timeOverride === null) timeOverride = .5;
+  else if(timeOverride === .5) timeOverride = .95;
+  else timeOverride = null;
+  const msg = timeOverride === null ? 'Real Texas time' : timeOverride === .5 ? 'Forced daytime' : 'Forced nighttime';
+  toast('🌗', 'TIME', msg); sfx('click');
+}
+function toggleSound(){
+  soundOn = !soundOn; store.set('sound', soundOn);
+  $('#btnSound').textContent = soundOn ? '🔊' : '🔇';
+  if(soundOn) sfx('click');
+}
+$('#btnUp').addEventListener('click', () => toggleUpside());
+$('#btnRain').addEventListener('click', toggleRain);
+$('#btnSound').addEventListener('click', toggleSound);
+
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){ closeModal(); return; }
+  if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+  if(e.key === 'F3'){ e.preventDefault(); document.body.classList.toggle('f3'); return; }
+  const k = e.key.toLowerCase();
+  if(k === 'u') toggleUpside();
+  else if(k === 'r') toggleRain();
+  else if(k === 'm') toggleSound();
+  else if(k === 'n') cycleNight();
+  else if(/^[1-9]$/.test(e.key)){
+    const sec = secs[+e.key - 1];
+    if(sec) sec.scrollIntoView({behavior:'smooth'});
+  }
+});
+
+/* ================= SCROLL: HOTBAR + PROGRESS + ACHIEVEMENT ================= */
+const secs = ['home','about','quest','chest','enchant','frames','trophy','craft','mail'].map(id => document.getElementById(id));
+let ticking = false;
+function onScroll(){
+  if(ticking) return; ticking = true;
+  requestAnimationFrame(() => {
+    ticking = false;
+    const y = scrollY, max = document.documentElement.scrollHeight - innerHeight;
+    $('#progress').style.width = (max > 0 ? y/max*100 : 0) + '%';
+    let cur = 0;
+    secs.forEach((s,i) => { if(s.getBoundingClientRect().top < innerHeight*.45) cur = i; });
+    $$('#hotbar .slot').forEach((s,i) => s.classList.toggle('on', i === cur));
+    if(y > innerHeight*.6) unlock('hello');
+  });
+}
+addEventListener('scroll', onScroll, {passive:true});
+
+/* ================= REVEAL + COUNTERS + BARS ================= */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    if(!en.isIntersecting) return;
+    const el = en.target;
+    el.classList.add('in');
+    if(el.dataset.to) countUp(el, +el.dataset.to);
+    if(el.matches('.bar2 i')) el.style.width = el.dataset.w + '%';
+    io.unobserve(el);
+  });
+}, {threshold:.2});
+function countUp(el, target){
+  const t0 = performance.now(), dur = 1200;
+  (function step(now){
+    const p = clamp((now-t0)/dur, 0, 1);
+    el.textContent = Math.round(target * (1 - Math.pow(1-p,3)));
+    if(p < 1) requestAnimationFrame(step);
+  })(t0);
+}
+
+/* ================= LOADER & BOOT ================= */
+function bootContent(){
+  const age = Math.floor((Date.now() - new Date(2002,3,16)) / (365.25*864e5));
+  const yrs = new Date().getFullYear() - 2012;
+  const roles = WORKS.length;
+  const s1 = $('#statAge'), s2 = $('#statYrs'), s3 = $('#statRoles'), s4 = $('#statSeasons');
+  s1.dataset.to = age; s2.dataset.to = yrs; s3.dataset.to = roles; s4.dataset.to = 4;
+  renderBook(0);
+  renderAch();
+  renderChest();
+  renderFrames();
+  renderCraft();
+  renderXP();
+  $('#btnSound').textContent = soundOn ? '🔊' : '🔇';
+  // reveal elements + observe counters/bars
+  $$('.reveal, [data-to], .bar2 i').forEach(el => io.observe(el));
+}
+
+let lp = 0;
+const msgs = ['Generating Brenham, Texas...','Mining Broadway blocks...','Opening the Upside Down gate...','Crafting Max Mayfield...','Loading skateboards...'];
+const li = setInterval(() => {
+  lp += rnd(3,9);
+  if(lp >= 100){
+    lp = 100; clearInterval(li);
+    setTimeout(hideLoader, 400);
+  }
+  $('#ldBar').style.width = lp + '%';
+  $('#ldTxt').textContent = msgs[Math.min(msgs.length-1, Math.floor(lp/21))];
+}, 120);
+
+function hideLoader(){
+  $('#loader').classList.add('done');
+  resizeWorld();
+  drawWorld();
+  typer();
+  loadWiki();
+  setTimeout(() => toast('🎮', 'WORLD LOADED', 'Welcome, SadieSink_2002. Press 1–9 to explore.'), 900);
+}
+let rzT;
+addEventListener('resize', () => { clearTimeout(rzT); rzT = setTimeout(resizeWorld, 150); });
+
+bootContent();
+onScroll();
+</script>
+</body>
+</html>

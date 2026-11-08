@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SADIE SINKCRAFT - Actress Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{
+  --grass:#5EBC2E; --grass-dark:#3E8E1F; --dirt:#8B5E34; --dirt-dark:#5D3D22;
+  --stone:#7D7D7D; --stone-dark:#555; --plank:#A9824B; --bedrock:#222;
+  --xp:#7CFC00; --heart:#FF0000;
+}
+*{box-sizing:border-box;image-rendering:auto}
+html{scroll-behavior:smooth}
+body{margin:0;background:#111;font-family:'VT323',monospace;color:#fff;overflow-x:hidden;cursor:crosshair}
+h1,h2,h3,.pixel{font-family:'Press Start 2P',monospace}
+a{color:inherit}
+/* DIRT TEXTURE */
+.dirt-bg{
+  background-color:#79553A;
+  background-image:
+    radial-gradient(#6b4a2f 20%, transparent 21%),
+    radial-gradient(#8a6543 15%, transparent 21%),
+    radial-gradient(#4e3320 10%, transparent 21%);
+  background-size:32px 32px,48px 48px,24px 24px;
+}
+/* LOADER */
+#loader{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s}
+#loader.hide{opacity:0;pointer-events:none}
+.load-bar{width:min(500px,80vw);height:28px;border:3px solid #000;background:#222;box-shadow:inset 2px 2px 0 #000}
+.load-fill{height:100%;width:0%;background:linear-gradient(#7CFC00,#4A9E00);transition:width .2s}
+/* MAIN MENU */
+#main-menu{min-height:100vh;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;
+background:linear-gradient(#78A7FF 0%, #9DCAFF 40%, #7CBD4B 40.5%, #5A8F2E 100%)}
+body.night #main-menu{background:linear-gradient(#060A2A 0%, #1A2350 40%, #2A3A2A 40.5%, #1A2415 100%)}
+.clouds{position:absolute;top:10%;width:200%;height:120px;background:repeating-linear-gradient(90deg, rgba(255,255,255,.9) 0 120px, transparent 120px 200px, rgba(255,255,255,.9) 200px 280px, transparent 280px 380px);animation:cloud 40s linear infinite;opacity:.8}
+@keyframes cloud{to{transform:translateX(-50%)}}
+.mc-logo{text-align:center;z-index:2;line-height:1}
+.mc-logo small{font-family:'VT323';font-size:22px;letter-spacing:6px;color:#ddd;text-shadow:2px 2px 0 #222}
+.mc-logo h1{font-size:clamp(28px,7vw,72px);color:#E0E0E0;text-shadow:4px 4px 0 #3a3a3a, 8px 8px 0 #000;margin:10px 0;letter-spacing:2px}
+.mc-logo h1 span{color:#5EBC2E;text-shadow:4px 4px 0 #1e4d0f, 8px 8px 0 #000}
+#splash{position:absolute;right:8%;top:32%;color:yellow;font-family:'VT323';font-size:28px;transform:rotate(-18deg);animation:splashPulse .5s infinite alternate;text-shadow:2px 2px 0 #3a3a00;z-index:3}
+@keyframes splashPulse{to{scale:1.1}}
+.mc-btn{display:block;width:min(420px,84vw);margin:10px auto;padding:14px;background:linear-gradient(#8B8B8B,#6F6F6F 45%,#5F5F5F);border:3px solid #000;box-shadow:inset 2px 2px 0 rgba(255,255,255,.6), inset -2px -3px 0 rgba(0,0,0,.6);color:#fff;font-family:'VT323';font-size:24px;text-shadow:2px 2px 0 #383838;text-align:center;text-decoration:none;cursor:pointer}
+.mc-btn:hover{background:linear-gradient(#7D8CFF,#5A6CDE);color:#FFFFA0}
+.mc-btn.green{background:linear-gradient(#6ABE30,#4A8E1B)}
+.mc-btn.green:hover{filter:brightness(1.1)}
+.mc-sub{font-size:18px;color:#fff;text-shadow:2px 2px 0 #000;margin-top:18px;z-index:2}
+/* HOTBAR NAV */
+#hotbar{position:sticky;top:0;z-index:900;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);border-top:3px solid #222;border-bottom:3px solid #222;padding:8px;display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+.slot{width:64px;height:64px;background:rgba(139,139,139,.6);border:3px solid #000;box-shadow:inset 3px 3px 0 rgba(255,255,255,.4), inset -3px -3px 0 rgba(0,0,0,.4);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:28px;text-decoration:none;position:relative;transition:.15s}
+.slot small{font-size:13px;font-family:'VT323';color:#fff;text-shadow:1px 1px 0 #000;line-height:1}
+.slot.active,.slot:hover{border-color:#fff;scale:1.08;background:rgba(180,180,180,.8)}
+.slot.active::after{content:'';position:absolute;inset:-6px;border:3px solid #fff;pointer-events:none}
+/* HUD */
+#hud{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;background:#1a1a1a;border-bottom:4px solid #000;position:sticky;top:84px;z-index:899}
+.hearts,.hunger{letter-spacing:2px;font-size:22px;filter:drop-shadow(2px 2px 0 #000)}
+.xp-wrap{flex:1;max-width:600px;text-align:center}
+.xp-lvl{font-family:'Press Start 2P';font-size:12px;color:var(--xp);text-shadow:2px 2px 0 #000}
+.xp-bar{height:12px;background:#222;border:2px solid #000;margin-top:4px}
+.xp-fill{height:100%;width:0;background:linear-gradient(#B8FF29,#5EBC2E);transition:width 1s}
+/* SECTIONS */
+section{padding:70px 18px;position:relative}
+.wrap{max-width:1100px;margin:auto}
+.sec-head{display:inline-block;background:linear-gradient(#7AC74A 0 22px, #8B5E34 22px);border:4px solid #000;box-shadow:6px 6px 0 #000;padding:14px 22px;margin-bottom:26px}
+.sec-head h2{margin:0;font-size:clamp(14px,3vw,22px);text-shadow:3px 3px 0 #000}
+.panel{background:#C6C6C6;border:4px solid #000;box-shadow:inset 3px 3px 0 #fff, inset -3px -3px 0 #555, 8px 8px 0 rgba(0,0,0,.5);color:#222;padding:22px}
+.stone-panel{background-color:#7D7D7D;background-image:repeating-linear-gradient(0deg, rgba(0,0,0,.15) 0 2px, transparent 2px 32px),repeating-linear-gradient(90deg, rgba(0,0,0,.15) 0 2px, transparent 2px 32px);border:4px solid #000;color:#fff;text-shadow:2px 2px 0 #000}
+.plank-panel{background-color:#A9824B;background-image:repeating-linear-gradient(0deg, rgba(0,0,0,.25) 0 4px, transparent 4px 36px);border:4px solid #2b1d0e;box-shadow:8px 8px 0 #000;color:#fff;text-shadow:2px 2px 0 #000}
+/* HERO */
+#home{background:linear-gradient(#6EB2FF,#B8DEFF);padding-top:40px}
+body.night #home{background:linear-gradient(#0B1030,#1E2A5A)}
+.hero-grid{display:grid;grid-template-columns:380px 1fr;gap:26px}
+@media(max-width:860px){.hero-grid{grid-template-columns:1fr}#hud{top:152px}}
+.player-card{background:#1e1e1e;border:4px solid #000;box-shadow:8px 8px 0 #000;padding:0;overflow:hidden}
+.player-banner{background:linear-gradient(90deg,#3A7D1A,#5EBC2E);padding:10px;font-family:'Press Start 2P';font-size:11px;text-align:center;border-bottom:4px solid #000}
+.photo-frame{margin:18px;background:#000;border:4px solid #555;box-shadow:inset 0 0 0 4px #222;position:relative;overflow:hidden;aspect-ratio:4/5}
+.photo-frame img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.photo-frame::after{content:'ъра SadieSink_2002';position:absolute;bottom:6px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);padding:4px 10px;font-size:20px;border:2px solid #fff}
+.stat-row{display:flex;justify-content:space-between;padding:8px 18px;font-size:22px;border-top:2px solid #333}
+.inv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px;background:#8B8B8B;padding:12px;border:3px solid #000}
+.inv-slot{background:#373737;border:3px solid #000;box-shadow:inset 2px 2px 0 #8B8B8B;padding:10px;text-align:center;font-size:20px}
+.big-title{font-size:clamp(26px,5vw,52px);line-height:1.1;margin:0;text-shadow:4px 4px 0 #000}
+.big-title em{color:#FFE93B;font-style:normal}
+.typewriter{background:#000;border:3px solid #fff;padding:14px;font-size:24px;min-height:88px;margin:18px 0;color:#7CFC00}
+.skill-bar{margin:12px 0}
+.skill-bar b{font-size:22px;text-shadow:2px 2px 0 #000}
+.bar{height:20px;background:#111;border:3px solid #000;margin-top:4px}
+.fill{height:100%;background:linear-gradient(90deg,#FFD700,#7CFC00);width:0;transition:width 1.2s}
+/* BOOK */
+.book{display:grid;grid-template-columns:1fr 1fr;gap:0;background:#F5EAC6;color:#3B2A1A;border:6px solid #4A3018;box-shadow:10px 10px 0 #000}
+.book div{padding:26px;font-size:23px;line-height:1.35}
+.book div+div{border-left:3px dashed #8B5E34}
+@media(max-width:700px){.book{grid-template-columns:1fr}.book div+div{border-left:0;border-top:3px dashed #8B5E34}}
+/* TIMELINE */
+.timeline{position:relative;margin-left:10px;border-left:6px solid #000;padding-left:26px}
+.t-item{position:relative;background:#E8E8E8;border:4px solid #000;box-shadow:6px 6px 0 #000;color:#222;padding:16px;margin:0 0 22px 0}
+.t-item::before{content:'◆';position:absolute;left:-46px;top:10px;background:#5EBC2E;border:3px solid #000;width:28px;height:28px;display:flex;align-items:center;justify-content:center}
+.t-item h3{margin:0 0 6px 0;font-size:13px}
+.t-item p{margin:0;font-size:22px}
+/* CHEST GRID */
+.chest{background:#3A3A3A url('');border:5px solid #000;box-shadow:inset 0 0 0 4px #8B8B8B, 10px 10px 0 #000;padding:18px;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.chest-item{background:#8B8B8B;border:3px solid #000;box-shadow:inset 2px 2px 0 #fff, inset -2px -2px 0 #555;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:48px;cursor:pointer;position:relative;transition:.15s;color:#fff}
+.chest-item:hover{scale:1.05;border-color:yellow}
+.chest-item b{font-size:17px;text-align:center;line-height:1.1;margin-top:6px;font-weight:normal;text-shadow:2px 2px 0 #000}
+.chest-item i{font-style:normal;font-size:15px;background:#000;padding:0 6px}
+/* TOOLTIP MODAL */
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:1000;padding:16px}
+#modal.open{display:flex}
+.modal-box{width:min(620px,95vw);background:#C6C6C6;border:4px solid #000;box-shadow:inset 3px 3px 0 #fff, 10px 10px 0 #000;color:#222;padding:0}
+.modal-head{background:#4A4A4A;color:#fff;font-family:'Press Start 2P';font-size:12px;padding:12px;border-bottom:4px solid #000;display:flex;justify-content:space-between}
+.modal-body{padding:20px;font-size:23px;line-height:1.4}
+.modal-body img{width:100%;max-height:300px;object-fit:cover;object-position:top;border:3px solid #000}
+/* GALLERY */
+.frames{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.frame{background:#6B4A2B;border:8px solid #3A2512;box-shadow:6px 6px 0 #000;padding:10px;background-image:repeating-linear-gradient(90deg, rgba(0,0,0,.2) 0 10px, transparent 10px 20px)}
+.frame img{width:100%;height:300px;object-fit:cover;object-position:top top;display:block;border:4px solid #000;background:#222}
+.frame p{margin:8px 0 0 0;text-align:center;font-size:22px;color:#FFE9A8;text-shadow:2px 2px 0 #000}
+/* AWARDS */
+.adv-toast{background:#212121;border:3px solid #000;box-shadow:6px 6px 0 #000;display:flex;gap:12px;align-items:center;padding:12px;margin:10px 0}
+.adv-toast .icon{width:56px;height:56px;background:#5EBC2E;border:3px solid #000;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0}
+.adv-toast h4{margin:0;font-family:'Press Start 2P';font-size:11px;color:#FFEB3B}
+.adv-toast p{margin:4px 0 0 0;font-size:21px;color:#ddd}
+/* CRAFTING */
+.craft{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center}
+.craft-grid{display:grid;grid-template-columns:repeat(3,90px);gap:6px;justify-content:center;background:#8B8B8B;border:4px solid #000;padding:12px}
+.craft-slot{width:90px;height:90px;background:#373737;border:3px solid #000;display:flex;align-items:center;justify-content:center;font-size:42px;cursor:pointer}
+.craft-slot.sel{border-color:#7CFC00;box-shadow:0 0 12px #7CFC00}
+.arrow{font-size:60px;text-shadow:3px 3px 0 #000}
+#craft-result{min-height:120px;background:#373737;border:4px dashed #7CFC00;display:flex;align-items:center;justify-content:center;font-size:24px;padding:12px;text-align:center}
+/* QUOTES */
+.villager{background:#EADBB2;border:4px solid #000;color:#222;padding:18px;font-size:26px;box-shadow:6px 6px 0 #000;margin:12px 0}
+/* CONTACT */
+.server-ip{background:#000;color:#7CFC00;border:4px solid #555;padding:14px;font-family:'Press Start 2P';font-size:13px;text-align:center;cursor:pointer}
+input,textarea{width:100%;background:#000;color:#7CFC00;border:3px solid #555;padding:12px;font-family:'VT323';font-size:22px;margin:8px 0}
+footer{background:#111 url('');border-top:6px solid #000;padding:26px;text-align:center;font-size:20px;color:#888}
+.mineable{cursor:pointer;user-select:none}
+.particle{position:fixed;width:10px;height:10px;pointer-events:none;z-index:2000}
+#toast-stack{position:fixed;right:14px;top:14px;z-index:3000;display:flex;flex-direction:column;gap:10px}
+.toast{background:#212121;border:3px solid #fff;color:#fff;padding:10px 14px;font-size:20px;box-shadow:5px 5px 0 #000;animation:slideIn .3s}
+@keyframes slideIn{from{transform:translateX(100%)}}
+.stars{position:absolute;inset:0;display:none}
+body.night .stars{display:block;background-image:radial-gradient(white 1px, transparent 1.5px);background-size:60px 60px;opacity:.6}
+</style>
+</head>
+<body class="dirt-bg">
+
+<div id="loader" class="dirt-bg">
+  <h2 class="pixel" style="font-size:14px;text-shadow:3px 3px 0 #000">SADIE SINKCRAFT</h2>
+  <p style="font-size:26px;margin:6px">Loading world... Building Brenham, Texas...</p>
+  <div class="load-bar"><div id="loadFill" class="load-fill"></div></div>
+  <p id="loadPct" style="font-size:22px">0%</p>
+</div>
+
+<div id="toast-stack"></div>
+
+<header id="main-menu">
+  <div class="stars"></div>
+  <div class="clouds"></div>
+  <div id="splash">100% Max Mayfield!</div>
+  <div class="mc-logo">
+    <small>SADIE ELIZABETH SINK • EST. 2002</small>
+    <h1>SADIE <span>SINKCRAFT</span></h1>
+    <small>STRANGER • BROADWAY • SCREAM QUEEN EDITION</small>
+  </div>
+  <div style="height:16px"></div>
+  <a class="mc-btn green" href="#home" onclick="playClick()">▶ &nbsp; ENTER WORLD - PORTFOLIO</a>
+  <a class="mc-btn" href="#filmography" onclick="playClick()">⛏ MULTIPLAYER - FILMOGRAPHY</a>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+    <button class="mc-btn" style="width:205px" onclick="toggleNight()">🌗 Day / Night</button>
+    <button class="mc-btn" style="width:205px" onclick="toggleSound()">🔊 Sound: <span id="sndLbl">ON</span></button>
+  </div>
+  <p class="mc-sub">Minecraft UI Tribute • Not affiliated with Mojang • Fan Portfolio • v1.16 Max Update</p>
+  <p class="mc-sub" style="font-size:16px;color:yellow">TIP: Click any grass block to mine! Press C for Creeper!</p>
+</header>
+
+<nav id="hotbar">
+  <a class="slot active" href="#home">🏠<small>HOME</small></a>
+  <a class="slot" href="#about">📖<small>ABOUT</small></a>
+  <a class="slot" href="#career">🗺️<small>QUEST</small></a>
+  <a class="slot" href="#filmography">🎬<small>FILMS</small></a>
+  <a class="slot" href="#gallery">🖼️<small>SKINS</small></a>
+  <a class="slot" href="#awards">🏆<small>AWARD</small></a>
+  <a class="slot" href="#craft">⚒️<small>CRAFT</small></a>
+  <a class="slot" href="#contact">💌<small>MAIL</small></a>
+</nav>
+
+<div id="hud">
+  <div class="hearts">❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️</div>
+  <div class="xp-wrap"><div class="xp-lvl">LVL 23 • Actress • XP <span id="xpNum">0</span>/100</div><div class="xp-bar"><div id="xpFill" class="xp-fill"></div></div></div>
+  <div class="hunger">🍗🍗🍗🍗🍗🍗🍗🍗🍗🍗</div>
+</div>
+
+<main>
+<!-- HOME -->
+<section id="home"><div class="wrap">
+<div class="sec-head mineable" onclick="mine(event,this)"><h2>🟩 PLAYER JOINED: SadieSink_2002</h2></div>
+<div class="hero-grid">
+<div class="player-card">
+<div class="player-banner">★ LEGENDARY PLAYER - REDHEAD WARRIOR ★</div>
+<div class="photo-frame">
+<img id="mainPhoto"
+src="https://commons.wikimedia.org/wiki/Special:FilePath/Sadie%20Sink%20by%20Patrick%20Lovell%2C%20November%202017.jpg?width=800"
+data-fb="https://upload.wikimedia.org/wikipedia/commons/9/9d/Sadie_Sink_2019_by_Glenn_Francis.jpg|https://static.wikia.nocookie.net/strangerthings/images/7/7b/Sadie_Sink.png|https://ui-avatars.com/api/?name=Sadie+Sink&background=4CAF50&color=fff&size=800&bold=true"
+onerror="handleImgError(this)" alt="Sadie Sink">
+</div>
+<div class="stat-row"><span>❤️ Health</span><span>20 / 20</span></div>
+<div class="stat-row"><span>🍖 Vegan Power</span><span>∞ since 2016</span></div>
+<div class="stat-row"><span>📍 Spawn</span><span>Brenham, Texas</span></div>
+<div class="stat-row"><span>🎂 Spawn Date</span><span>Apr 16, 2002 (23)</span></div>
+<div class="stat-row"><span>📏 Height</span><span>5'3" / 160cm</span></div>
+<div class="inv-grid">
+<div class="inv-slot">🛹<br>Skate</div>
+<div class="inv-slot">🎸<br>Music</div>
+<div class="inv-slot">🌱<br>Vegan</div>
+</div>
+<div style="padding:0 18px 18px 18px"><a class="mc-btn green" href="#filmography">VIEW INVENTORY ↓</a></div>
+</div>
+
+<div>
+<h1 class="big-title">HI, I'M <em>SADIE SINK</em><br>ACTRESS • SINGER • STAGE MINER</h1>
+<div class="typewriter" id="typewriter">> Rendering biography...</div>
+<div class="panel stone-panel">
+<p style="font-size:25px;margin:0 0 10px 0">From Broadway <b>Annie</b> at age 10 → Hawkins' Max Mayfield → A24's <b>The Whale</b> → Tony-nominated Broadway star. I mine emotions and craft unforgettable characters.</p>
+<div class="skill-bar"><b>⚔️ Acting - 98</b><div class="bar"><div class="fill" data-w="98"></div></div></div>
+<div class="skill-bar"><b>🎭 Broadway Vocals - 95</b><div class="bar"><div class="fill" data-w="95"></div></div></div>
+<div class="skill-bar"><b>🛹 Skateboarding (Max Skill) - 88</b><div class="bar"><div class="fill" data-w="88"></div></div></div>
+<div class="skill-bar"><b>🎸 Guitar / Singing (O'Dessa) - 90</b><div class="bar"><div class="fill" data-w="90"></div></div></div>
+<div class="skill-bar"><b>😱 Scream Queen Endurance - 99</b><div class="bar"><div class="fill" data-w="99"></div></div></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+<button class="mc-btn green" style="flex:1" onclick="showToast('Achievement Get!','You hired Sadie for your next blockbuster!');playLevelUp()">💎 HIRE ME</button>
+<button class="mc-btn" style="flex:1" onclick="document.getElementById('contact').scrollIntoView()">📩 MESSAGE</button>
+</div>
+</div>
+</div>
+</div>
+</div></section>
+
+<!-- ABOUT -->
+<section id="about" class="dirt-bg"><div class="wrap">
+<div class="sec-head mineable" onclick="mine(event,this)"><h2>📖 CHAPTER I: ORIGIN STORY</h2></div>
+<div class="book">
+<div>
+<h3 class="pixel" style="font-size:12px">EARLY LIFE - SEED: BRENHAM</h3>
+<p><b>Sadie Elizabeth Sink</b> was born April 16, 2002 in Brenham, Texas to Lori, a math teacher, and Casey Sink, a football coach. One of 5 kids - 3 older brothers Caleb, Spencer, Mitchell and younger sister Jacey.</p>
+<p>Obsessed with <i>High School Musical</i> at 7, she re-enacted it in her garage. Her mom sent her to Houston community theater. Brother Mitchell was taking acting classes - Sadie tagged along and stole the show.</p>
+<p>At <b>10 years old</b>, after auditioning on a whim in NYC, she was cast as <b>Annie on Broadway (2012-2014)</b>, alternating the lead role. Then played Young Queen Elizabeth II in <i>The Audience</i> (2015) opposite Helen Mirren.</p>
+</div>
+<div>
+<h3 class="pixel" style="font-size:12px">BREAKTHROUGH & NOW</h3>
+<p>TV grind: <i>The Americans, Blue Bloods, American Odyssey, Unbreakable Kimmy Schmidt</i>. Film: <i>Chuck, The Glass Castle (2017)</i> as Young Lori Walls - where Woody Harrelson inspired her to go vegan.</p>
+<p>In 2017 at 14, she joined <b>Stranger Things Season 2 as Max Mayfield</b> - the redheaded skateboarder from California. Season 4's Vecna / <i>Running Up That Hill</i> scene (2022) became TV history with 1B+ Spotify streams revival.</p>
+<p>Now: Critics Choice nominee for <b>The Whale (2022)</b>, scream-queen lead in <b>Fear Street 1978</b>, Taylor Swift's <b>All Too Well</b> muse, rock star in <b>O'Dessa (2025)</b>, Tony nominee for <b>John Proctor Is the Villain (2025)</b>, and cast in MCU <b>Spider-Man: Brand New Day (July 31, 2026)</b>.</p>
+<p><i>Fun facts:</i> Natural redhead, loves skateboarding IRL, has dog Tina, besties with Millie Bobby Brown & Maya Hawke.</p>
+</div>
+</div>
+</div></section>
+
+<!-- CAREER -->
+<section id="career" style="background:linear-gradient(#87CEEB,#E0F6FF)"><div class="wrap">
+<div class="sec-head mineable" onclick="mine(event,this)"><h2>🗺️ ADVANCEMENT TREE: CAREER QUESTS</h2></div>
+<div class="panel">
+<div class="timeline">
+<div class="t-item"><h3>2012-2014 - [ STONE AGE ] BROADWAY DEBUT</h3><p><b>Annie as Annie</b> - Theatre Royal? No, Palace Theatre NYC. Age 10-11, 8 shows a week. Achievement: <i>Diamond Pickaxe Earned!</i></p></div>
+<div class="t-item"><h3>2015 - [ IRON AGE ] THE AUDIENCE</h3><p>Young Elizabeth II opposite Helen Mirren + Dame Helen praised her. TV roles in The Americans & Blue Bloods.</p></div>
+<div class="t-item"><h3>2017 - [ PORTAL TO HAWKINS ] STRANGER THINGS 2</h3><p>Cast as <b>Max Mayfield / MADMAX</b>. Zoomer tomboy, Lucas love interest, Billy's stepsister. Skateboard + arcade skills maxed.</p></div>
+<div class="t-item"><h3>2021 - [ NETHER UPDATE ] SCREAM QUEEN</h3><p><b>Fear Street Part 2: 1978 as Ziggy Berman</b> + Part 3: 1666. <b>All Too Well Short Film as Her</b> (Taylor Swift) - 13 min heartbreak, 100M+ views.</p></div>
+<div class="t-item"><h3>2022 - [ ENDER DRAGON ] THE WHALE & VECNA</h3><p>Stranger Things 4 - Vecna curse + Kate Bush escape = Emmy buzz. <b>The Whale as Ellie</b> opposite Brendan Fraser - Critics Choice Best Young Performer nom, NBR Breakthrough.</p></div>
+<div class="t-item"><h3>2025 - [ ENCHANTED ] BROADWAY RETURN + ROCKSTAR</h3><p><b>O'Dessa (Hulu)</b> - post-apocalyptic rock opera, sings + plays guitar live. <b>John Proctor Is the Villain as Shelby</b> - Tony Nom Best Actress in a Play. <b>Berlin Nobody</b> thriller with Eric Bana.</p></div>
+<div class="t-item" style="background:#FFF9C4"><h3>2026 - [ NEXT UPDATE COMING... ] SPIDER-MAN</h3><p><b>Spider-Man: Brand New Day (MCU)</b> - Top secret role! Rumored Jean Grey / Mayday? Releases July 31, 2026 with Tom Holland. Stay tuned!</p></div>
+</div>
+</div>
+</div></section>
+
+<!-- FILMOGRAPHY -->
+<section id="filmography" class="dirt-bg"><div class="wrap">
+<div class="sec-head mineable" onclick="mine(event,this)"><h2>🎬 CHEST: FILMOGRAPHY INVENTORY (Click to Inspect)</h2></div>
+<p style="font-size:23px;text-shadow:2px 2px 0 #000">Each block is enchanted with lore. Click to open item details. Hover shows rarity!</p>
+<div class="chest" id="chest"></div>
+</div></section>
+
+<!-- GALLERY -->
+<section id="gallery" style="background:#2B1D0E"><div class="wrap">
+<div class="sec-head mineable" onclick="mine(event,this)"><h2>🖼️ ITEM FRAMES: SKIN GALLERY</h2></div>
+<div class="frames">
+<div class="frame mineable" onclick="mine(event,this)"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Sadie%20Sink%20by%20Patrick%20Lovell%2C%20November%202017.jpg?width=600" data-fb="https://ui-avatars.com/api/?name=2017+Max&background=7CB342&size=600" onerror="handleImgError(this)" alt="2017"><p>2017 - Hawkins Newbie (Age 15)</p></div>
+<div class="frame mineable" onclick="mine(event,this)"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Sadie%20Sink%20%2848443398191%29.jpg?width=600" data-fb="https://ui-avatars.com/api/?name=2021+Ziggy&background=D32F2F&size=600" onerror="handleImgError(this)" alt="2021"><p>2021 - Fear Street Ziggy Era</p></div>
+<div class="frame mineable" onclick="mine(event,this)"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Sadie%20Sink%20Cannes%202022.jpg?width=600" data-fb="https://ui-avatars.com/api/?name=2022+Ellie&background=1976D2&size=600" onerror="handleImgError(this)" alt="2022"><p>2022 - The Whale Prestige Era</p></div>
+<div class="frame mineable" onclick="mine(event,this)"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Sadie%20Sink%20by%20Patrick%20Lovell%2C%20November%202017.jpg?width=600" data-fb="https://ui-avatars.com/api/?name=2025+Shelby&background=FF9800&size=600" onerror="handleImgError(this)" alt="2025"><p>2025 - Broadway & O'Dessa Rockstar</p></div>
+</div>
+<p style="color:#aaa;font-size:20px">Photos: Wikimedia Commons / Patrick Lovell & event photographers. Click frames to mine XP! Replace URLs with HD press shots if self-hosting.</p>
+</div></section>
+
+<!-- AWARDS -->
+<section id="awards" style="background:linear-gradient(#1A1A1A,#333)"><div class="wrap">
+<div class="sec-head mineable" onclick="mine(event,this)"><h2>🏆 ADVANCEMENTS & TROPHIES</h2></div>
+<div id="awardsList">
+<div class="adv-toast"><div class="icon">🐉</div><div><h4>Advancement Made!</h4><p><b>Tony Nomination 2025</b> - Best Actress in a Play, John Proctor Is the Villain</p></div></div>
+<div class="adv-toast"><div class="icon">🐋</div><div><h4>Advancement Made!</h4><p><b>Critics Choice Nom 2023</b> - Best Young Performer, The Whale + NBR Breakthrough Award</p></div></div>
+<div class="adv-toast"><div class="icon">🚲</div><div><h4>Advancement Made!</h4><p><b>MTV Movie & Saturn Noms</b> - Best Performance Stranger Things 4, Fear Street</p></div></div>
+<div class="adv-toast"><div class="icon">🧛</div><div><h4>Advancement Made!</h4><p><b>Scream Queen Crown</b> - Fear Street 1978 - Rotten Tomatoes 88% fan love</p></div></div>
+<div class="adv-toast"><div class="icon">🎸</div><div><h4>Advancement Made!</h4><p><b>Hollywood Music in Media Nom 2025</b> - Original songs O'Dessa (sang live!)</p></div></div>
+</div>
+<div class="panel plank-panel" style="margin-top:18px">
+<h3 class="pixel" style="font-size:12px">💬 FAMOUS QUOTES (Villager Trades)</h3>
+<div class="villager">“Max has taught me how to be brave, even when you're scared. You just keep running up that hill.” — Sadie on Stranger Things</div>
+<div class="villager">“I don't like to label myself. I just want to tell honest stories, whether it's Broadway, horror, or Marvel.” — Variety 2025</div>
+<div class="villager">“Going vegan changed my crafting recipe. Kindness is the best enchantment.” — on Woody Harrelson influence</div>
+</div>
+</div></section>
+
+<!-- CRAFT -->
+<section id="craft" class="dirt-bg"><div class="wrap">
+<div class="sec-head mineable" onclick="mine(event,this)"><h2>⚒️ CRAFTING TABLE: BUILD SADIE'S SKILLS</h2></div>
+<div class="panel"><p style="font-size:23px;margin-top:0">Select 3 ingredients to craft a Master Performance! (Try: 🎭 + 🎸 + 🛹)</p>
+<div class="craft">
+<div class="craft-grid" id="craftGrid">
+<div class="craft-slot" data-v="🎭">🎭</div><div class="craft-slot" data-v="🎸">🎸</div><div class="craft-slot" data-v="🛹">🛹</div>
+<div class="craft-slot" data-v="😱">😱</div><div class="craft-slot" data-v="👑">👑</div><div class="craft-slot" data-v="🌱">🌱</div>
+<div class="craft-slot" data-v="📖">📖</div><div class="craft-slot" data-v="🎬">🎬</div><div class="craft-slot" data-v="💎">💎</div>
+</div>
+<div class="arrow">➡️</div>
+<div id="craft-result">Empty...<br>Choose ingredients!</div>
+</div>
+<button class="mc-btn green" onclick="craftClear()">CLEAR GRID</button>
+</div>
+</div></section>
+
+<!-- CONTACT -->
+<section id="contact" style="background:linear-gradient(#0D1B0D,#1E3A1E)"><div class="wrap">
+<div class="sec-head mineable" onclick="mine(event,this)"><h2>💌 MULTIPLAYER SERVER: CONTACT</h2></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:18px" id="contactGrid">
+<div class="panel">
+<h3 class="pixel" style="font-size:12px">SERVER IP (AGENCY)</h3>
+<div class="server-ip" onclick="navigator.clipboard&&navigator.clipboard.writeText('fanmail@sadiesinkcraft.gg');showToast('Copied!','Server IP copied!');playPop()">fanmail@sadiesinkcraft.gg 📋</div>
+<p style="font-size:22px">📍 Base: New York City / New Jersey<br>🏢 Rep: WME + Peikoff Mahan<br>📸 IG: @sadiesink_ (20M+ followers)<br>🐕 Party Member: Tina (dog)</p>
+<a class="mc-btn" href="https://www.instagram.com/sadiesink_/" target="_blank">INSTAGRAM</a>
+<a class="mc-btn" href="https://www.imdb.com/name/nm5301405/" target="_blank">IMDB - LVL 23</a>
+</div>
+<div class="panel" style="background:#111;color:#7CFC00;border-color:#555">
+<h3 class="pixel" style="font-size:12px;color:#fff">SEND REDSTONE MESSAGE</h3>
+<input id="cName" placeholder="Your Gamertag...">
+<input id="cMail" placeholder="Your Email...">
+<textarea id="cMsg" rows="4" placeholder="Write a book & quill message for Sadie..."></textarea>
+<button class="mc-btn green" onclick="sendMsg()">📤 SEND VIA REDSTONE</button>
+</div>
+</div>
+<style>@media(max-width:800px){#contactGrid{grid-template-columns:1fr!important}}</style>
+</div></section>
+</main>
+
+<footer>
+<div style="font-family:'Press Start 2P';font-size:11px;color:#fff">⛏ SADIE SINKCRAFT • BEDROCK EDITION ⛏</div>
+<p>Fan-made portfolio tribute in Minecraft UI style inspired by your Minecraft_UI repo. All film data for education. Photos via Wikimedia Commons. Minecraft © Mojang. Sadie Sink © herself.<br>Made with ❤️ + Redstone + Running Up That Hill on loop.</p>
+</footer>
+
+<div id="modal"><div class="modal-box"><div class="modal-head"><span id="mTitle">ITEM</span><span style="cursor:pointer" onclick="closeModal()">❌</span></div><div class="modal-body" id="mBody"></div></div></div>
+
+<script>
+let soundOn=true, xp=12, selected=[];
+let ctx;
+function ac(){ if(!ctx) ctx=new (window.AudioContext||window.webkitAudioContext)(); return ctx; }
+function beep(f=600,d=.08,type='square',v=.08){ if(!soundOn) return; try{ let a=ac(),o=a.createOscillator(),g=a.createGain(); o.type=type;o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(a.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+d);o.stop(a.currentTime+d);}catch(e){} }
+function playClick(){beep(220,.07)} function playPop(){beep(600,.09,'square'); setTimeout(()=>beep(900,.1),70)} function playLevelUp(){[523,659,784,1046].forEach((f,i)=>setTimeout(()=>beep(f,.15),i*110))} function playBreak(){beep(150,.12,'sawtooth',.12)}
+function toggleSound(){soundOn=!soundOn;document.getElementById('sndLbl').innerText=soundOn?'ON':'OFF';playClick()}
+function toggleNight(){document.body.classList.toggle('night');playPop();showToast(document.body.classList.contains('night')?'Night falls...':'Day breaks!','Mobs '+(document.body.classList.contains('night')?'spawn. Watch for Demogorgons!':'burn. Safe to build.'))}
+
+// LOADER
+let lp=0; let li=setInterval(()=>{lp+=Math.random()*18; if(lp>=100){lp=100;clearInterval(li);setTimeout(()=>{document.getElementById('loader').classList.add('hide');playLevelUp();showToast('World Loaded!','Welcome, SadieSink_2002 joined the game');},500)} document.getElementById('loadFill').style.width=lp+'%';document.getElementById('loadPct').innerText=Math.floor(lp)+'%';},200);
+
+// SPLASHES
+const splashes=["100% Max Mayfield!","Running Up That Hill!","Also Try Fear Street!","Vegan Power!","Punch Trees, Get Roles!","Tony Nominee!","Spider-Man 2026!","MADMAX!","Scream Queen!","Broadway Baby!"];
+let si=0; setInterval(()=>{si=(si+1)%splashes.length;document.getElementById('splash').innerText=splashes[si]},2500);
+
+// TYPEWRITER
+const lines=["> Name: Sadie Elizabeth Sink...","> Class: Actress / Singer / Vegan Warrior...","> Main Quest: Stranger Things as Max Mayfield...","> Side Quests: Broadway, Horror, Marvel...","> Status: READY TO CRAFT STORIES ❤"];
+let lii=0,ci=0,tw=document.getElementById('typewriter');
+setInterval(()=>{ let full=lines[lii]; ci++; tw.innerHTML=full.slice(0,ci)+'<span style="animation:blink 1s infinite">_</span>'; if(ci>full.length+12){cii=(lii+1)%lines.length;ci=0;} },55);
+
+// SCROLL XP + BARS + HOTBAR
+const fills=document.querySelectorAll('.fill');
+let obs=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){en.target.style.width=en.target.dataset.w+'%'; addXP(8);}})},{threshold:.4});
+fills.forEach(f=>obs.observe(f));
+window.addEventListener('scroll',()=>{
+  let h=document.documentElement; let p=h.scrollTop/(h.scrollHeight-h.clientHeight)*100;
+  document.getElementById('xpFill').style.width=Math.min(100,xp+p/3)+'%'; document.getElementById('xpNum').innerText=Math.floor(Math.min(100,xp+p/3));
+  document.querySelectorAll('#hotbar .slot').forEach(s=>{
+    let id=s.getAttribute('href'); let sec=document.querySelector(id);
+    if(sec){ let r=sec.getBoundingClientRect(); if(r.top<200&&r.bottom>200){document.querySelectorAll('#hotbar .slot').forEach(x=>x.classList.remove('active'));s.classList.add('active');}}
+  });
+});
+function addXP(n){xp=Math.min(100,xp+n);document.getElementById('xpFill').style.width=xp+'%';document.getElementById('xpNum').innerText=xp; if(xp>=100){playLevelUp();showToast('LEVEL UP!','You are now a Sadie Sink superfan!');xp=0;}}
+
+// IMAGES FALLBACK
+function handleImgError(el){
+  let list=(el.dataset.fb||'').split('|').filter(Boolean); let i=parseInt(el.dataset.i||'0');
+  if(i<list.length){el.dataset.i=i+1; el.src=list[i];} else {el.style.display='none';}
+}
+
+// MINING PARTICLES
+function mine(e,elm){
+  playBreak(); addXP(3);
+  const colors=['#5EBC2E','#8B5E34','#7D7D7D','#FFEB3B'];
+  for(let i=0;i<14;i++){ let p=document.createElement('div');p.className='particle';p.style.background=colors[Math.floor(Math.random()*colors.length)];p.style.left=e.clientX+'px';p.style.top=e.clientY+'px';document.body.appendChild(p);
+    let vx=(Math.random()-.5)*8, vy=Math.random()*-8-2; let x=e.clientX,y=e.clientY; let iv=setInterval(()=>{x+=vx;y+=vy;vy+=.5;p.style.left=x+'px';p.style.top=y+'px';p.style.opacity-= .04; if(p.style.opacity<0){clearInterval(iv);p.remove()}},20);
+  }
+  elm.style.transform='scale(.97)'; setTimeout(()=>elm.style.transform='',150);
+}
+
+// FILMOGRAPHY DATA - researched
+const films=[
+ {icon:'🚲',title:'Stranger Things',year:'2017-2025',role:'Max Mayfield',tag:'LEGENDARY',desc:'Breakthrough as MADMAX, skateboarding arcade queen. S4 Vecna possession + Running Up That Hill escape is one of most-watched Netflix scenes ever. S5 finale closes her arc.',rating:'⭐ 8.7/10 Netflix'},
+ {icon:'🐋',title:'The Whale',year:'2022',role:'Ellie',tag:'EPIC',desc:'A24 drama by Darren Aronofsky. Plays angry, hurt daughter of Brendan Fraser\'s Charlie. Critics Choice nom Best Young Performer, National Board of Review Breakthrough.',rating:'⭐ 7.7/10 A24'},
+ {icon:'🔪',title:'Fear Street 1978',year:'2021',role:'Ziggy Berman',tag:'RARE',desc:'Netflix horror trilogy lead as rebellious camp counselor Ziggy. Cemented scream-queen status. Gory, funny, heartbreaking.',rating:'⭐ 6.8/10 Horror'},
+ {icon:'🧣',title:'All Too Well',year:'2021',role:'Her',tag:'EPIC',desc:'Taylor Swift short film opposite Dylan O\'Brien. Plays younger version of Swift in 13-min heartbreak saga. 100M+ YouTube views in days.',rating:'⭐ 8.5/10 Short'},
+ {icon:'🎸',title:"O'Dessa",year:'2025',role:"O'Dessa",tag:'LEGENDARY',desc:'Hulu post-apocalyptic rock opera. Sadie sings 7 original songs live + plays guitar. Sundance premiere, praised vocals.',rating:'⭐ 7.1/10 Musical'},
+ {icon:'⚖️',title:'John Proctor Is Villain',year:'2025',role:'Shelby Holcomb',tag:'MYTHIC',desc:'Broadway Booth Theatre return. High-school #MeToo drama. Tony nomination Best Actress in a Play + Drama Desk nom.',rating:'⭐ Broadway Hit'},
+ {icon:'🕷️',title:'Spider-Man: Brand New Day',year:'2026',role:'??? CLASSIFIED',tag:'???',desc:'MCU Phase 6 with Tom Holland. Role kept secret (fans theorize Jean Grey / Mayday Parker / Gwen). Releases July 31, 2026.',rating:'🔒 Coming Soon'},
+ {icon:'🏜️',title:'The Glass Castle',year:'2017',role:'Young Lori Walls',tag:'COMMON',desc:'First major film as young Lori opposite Brie Larson & Woody Harrelson. On this set Woody inspired her vegan journey.',rating:'⭐ 7.1/10 Drama'},
+ {icon:'🏚️',title:'Eli',year:'2019',role:'Haley',tag:'UNCOMMON',desc:'Netflix horror as mysterious girl befriending sick boy in haunted clinic. Twist ending fan favorite.',rating:'⭐ 5.8/10'},
+ {icon:'💌',title:'Dear Zoe',year:'2022',role:'Tess DeNunzio',tag:'UNCOMMON',desc:'Grief drama as teen coping with sister\'s loss. Quiet, tender lead performance.',rating:'⭐ 6.4/10'},
+ {icon:'👻',title:'Berlin Nobody',year:'2025',role:'TBD Thriller',tag:'RARE',desc:'Mystery thriller with Eric Bana & Sylvia Hoeks. Premiere Venice 2025.',rating:'🎬 Festival'},
+ {icon:'👧',title:'Annie Broadway',year:'2012',role:'Annie Bennett',tag:'MYTHIC',desc:'Origin block! Age 10, beat 1000 kids to star as Annie at Palace Theatre. 8 shows/week for a year.',rating:'⭐ Broadway Legend'},
+];
+const chest=document.getElementById('chest');
+films.forEach((f,i)=>{
+  let d=document.createElement('div');d.className='chest-item';d.innerHTML=`<span>${f.icon}</span><b>${f.title}</b><i>${f.year}</i>`;
+  d.title=`${f.title} - ${f.tag}`; d.onclick=(e)=>{playPop();openModal(f);mine(e,d);};
+  chest.appendChild(d);
+});
+function openModal(f){
+  document.getElementById('mTitle').innerText=f.icon+' '+f.title.toUpperCase()+' ['+f.tag+']';
+  document.getElementById('mBody').innerHTML=`<p><b>🎭 Role:</b> ${f.role} <br><b>📅 Year:</b> ${f.year} <br><b>✨ Rating:</b> ${f.rating}</p><p>${f.desc}</p><button class="mc-btn green" onclick="closeModal();showToast('Added to Inventory!','${f.title} saved to your Ender Chest')">TAKE ITEM</button>`;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');playClick()}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+
+// CRAFTING
+document.querySelectorAll('#craftGrid .craft-slot').forEach(s=>{
+  s.onclick=()=>{
+    playClick(); s.classList.toggle('sel');
+    let v=s.dataset.v;
+    if(s.classList.contains('sel')) selected.push(v); else selected=selected.filter(x=>x!==v);
+    if(selected.length>3){let first=document.querySelector('.craft-slot.sel');first&&first.classList.remove('sel');selected.shift();}
+    updateCraft();
+  }
+});
+function updateCraft(){
+  let r=document.getElementById('craft-result');
+  if(selected.length===0){r.innerHTML='Empty...<br>Choose ingredients!';return;}
+  if(selected.length<3){r.innerHTML='Crafting... '+selected.join(' + ')+'<br>Need '+(3-selected.length)+' more!';return;}
+  playLevelUp();
+  let combo=selected.slice().sort().join('');
+  let out='🌟 MASTER PERFORMANCE CRAFTED! 🌟<br>';
+  if(selected.includes('🎭')&&selected.includes('🎸')&&selected.includes('🛹')) out+='<b>O\'Dessa Max Mix!</b> Broadway vocals + rock + skate = Sadie prime!';
+  else if(selected.includes('😱')&&selected.includes('🎬')&&selected.includes('💎')) out+='<b>Scream Queen Diamond Sword!</b> Fear Street + Stranger Things power!';
+  else if(selected.includes('👑')&&selected.includes('📖')&&selected.includes('🎭')) out+='<b>Tony Enchanted Golden Apple!</b> Stage royalty healing!';
+  else out+='<b>'+selected.join('')+' Superstar!</b> New lore unlocked: Versatility +100';
+  r.innerHTML=out; addXP(15); showToast('Crafting Complete!',out.replace(/<[^>]*>/g,''));
+}
+function craftClear(){selected=[];document.querySelectorAll('.craft-slot.sel').forEach(x=>x.classList.remove('sel'));updateCraft();playClick()}
+
+// TOASTS
+function showToast(t,m){
+  let s=document.getElementById('toast-stack');let d=document.createElement('div');d.className='toast';d.innerHTML=`<b style="color:#FFEB3B">✔ ${t}</b><br>${m}`;s.appendChild(d);setTimeout(()=>{d.style.opacity='0';setTimeout(()=>d.remove(),500)},4000);
+}
+// CREEPER EASTER EGG
+document.addEventListener('keydown',e=>{
+  if(e.key.toLowerCase()==='c'){playBreak();showToast('SSSsss...','Creeper? No, it\'s Vecna! RUN!');document.body.style.filter='invert(1)';setTimeout(()=>document.body.style.filter='',400);}
+  if(e.key==='Escape')closeModal();
+});
+function sendMsg(){
+  let n=document.getElementById('cName').value||'Steve';
+  playLevelUp();showToast('Message Sent!',`Thanks ${n}! Redstone delivered to Sadie's base. She replies via fanmail!`);
+  document.getElementById('cMsg').value='';
+}
+// periodic advancement
+setTimeout(()=>showToast('Advancement Made!','You scrolled like Max running from Vecna! +10 XP'),15000);
+</script>
+</body>
+</html>
