@@ -1,0 +1,1619 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JENSLINJEMZ · Minecraft Developer Portfolio</title>
+<meta name="description" content="Minecraft-style developer portfolio for GitHub user JENSLINJEMZ, built live from the GitHub public API.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{
+  --grass:#5EBC2E;--grass-d:#3d8a1c;--dirt:#79553A;--dirt-d:#4e3320;--stone:#7a7a7a;
+  --gold:#FFD84A;--paper:#F3E6C2;--xp:#7CFC00;--heart:#ff3b3b;
+  --px:'Press Start 2P',monospace;--mono:'VT323',monospace;
+}
+body.upside{--grass:#8a1c1c;--grass-d:#4a0e0e;--dirt:#3a1313;--dirt-d:#1d0808;--stone:#5a2c2c;--gold:#ff8a7a;--xp:#ff4040;--paper:#e6cfb8}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;background:#0c0c0c}
+body{margin:0;font-family:var(--mono);font-size:24px;line-height:1.25;color:#fff;background:#0c0c0c;overflow-x:hidden}
+body.locked{overflow:hidden}
+h1,h2,h3,h4,h5,h6,.px{font-family:var(--px);font-weight:normal;margin:0}
+button,input,select,textarea{font-family:var(--mono);font-size:22px}
+button{color:#fff;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:3px solid #fff;outline-offset:3px}
+::selection{background:var(--grass);color:#000}
+.dirt{background-color:var(--dirt);background-image:radial-gradient(circle at 20% 30%,rgba(0,0,0,.25) 0 3px,transparent 4px),radial-gradient(circle at 70% 60%,rgba(255,255,255,.08) 0 2px,transparent 3px),radial-gradient(circle at 45% 80%,rgba(0,0,0,.2) 0 4px,transparent 5px);background-size:37px 37px,53px 53px,29px 29px}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s,transform .7s}
+.reveal.in{opacity:1;transform:none}
+@keyframes blink{50%{opacity:0}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.shake{animation:shake .5s}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:2500}
+
+/* LOADER */
+#loader{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background-color:var(--dirt);transition:opacity .6s,visibility .6s}
+#loader.done{opacity:0;visibility:hidden;pointer-events:none}
+.lbox{text-align:center;width:min(580px,88vw)}
+.ltitle{font-family:var(--px);font-size:clamp(14px,2.8vw,24px);text-shadow:4px 4px 0 #000;line-height:1.6}
+.blocks{display:flex;gap:6px;justify-content:center;margin:26px 0}
+.blocks span{width:34px;height:34px;border:3px solid #000;background:var(--grass);animation:bob .6s infinite alternate}
+.blocks span:nth-child(3n){background:var(--stone)}
+.blocks span:nth-child(3n+1){background:var(--dirt-d)}
+.blocks span:nth-child(2n){animation-delay:.2s}
+@keyframes bob{to{transform:translateY(-12px)}}
+
+/* BARS */
+.bar{height:26px;border:4px solid #000;background:#111;box-shadow:inset 3px 3px 0 #000}
+.bar>i{display:block;height:100%;width:0;background:repeating-linear-gradient(90deg,#7CFC00 0 14px,#4a9e00 14px 18px);transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.bar.gold>i{background:repeating-linear-gradient(90deg,#FFD84A 0 16px,#e0a800 16px 20px)}
+.bar.small{height:16px;border-width:3px;margin-top:20px}
+
+/* BUTTONS & PANELS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-width:180px;padding:14px 22px;background:linear-gradient(#9a9a9a,#7a7a7a 50%,#6a6a6a);border:3px solid #000;box-shadow:inset 3px 3px 0 rgba(255,255,255,.55),inset -3px -4px 0 rgba(0,0,0,.45);color:#fff;text-shadow:2px 2px 0 #333;text-decoration:none;transition:transform .08s,background .15s,color .15s;font-size:24px}
+.btn:hover{background:linear-gradient(#8fa0ff,#5a6cde);color:#ffffa0}
+.btn:active{transform:translateY(3px)}
+.btn.g{background:linear-gradient(#7ed348,#4a9118 55%,#3d7d14)}
+.btn.g:hover{background:linear-gradient(#a6ff66,#5fb62a);color:#fff}
+.btn.r{background:linear-gradient(#e05555,#a52a2a)}
+.btn.sm{min-width:0;padding:8px 14px;font-size:20px}
+.btn[disabled]{opacity:.5;cursor:default}
+.stone{background-color:var(--stone);background-image:linear-gradient(45deg,rgba(0,0,0,.14) 25%,transparent 25%,transparent 75%,rgba(0,0,0,.14) 75%),linear-gradient(45deg,rgba(0,0,0,.14) 25%,transparent 25%,transparent 75%,rgba(0,0,0,.14) 75%);background-size:32px 32px;background-position:0 0,16px 16px;color:#fff;text-shadow:2px 2px 0 #000;border:4px solid #000;box-shadow:inset 4px 4px 0 rgba(255,255,255,.25),inset -4px -4px 0 rgba(0,0,0,.35),10px 10px 0 rgba(0,0,0,.45);padding:26px}
+.panel{background:#c6c6c6;color:#202020;border:4px solid #000;box-shadow:inset 4px 4px 0 #fff,inset -4px -4px 0 #555,10px 10px 0 rgba(0,0,0,.45);padding:26px}
+.mini-note{font-size:20px;color:#bbb;display:block;margin-top:8px}
+.sec-title{display:inline-flex;align-items:center;background:linear-gradient(#7ac74a 0 14px,#8b5e34 14px);border:4px solid #000;box-shadow:8px 8px 0 #000;padding:16px 22px;margin-bottom:34px}
+.sec-title h2{font-size:clamp(14px,2.6vw,24px);text-shadow:3px 3px 0 #000}
+.lead{font-size:clamp(22px,2.2vw,28px);text-shadow:2px 2px 0 #000;max-width:860px;margin:0 0 30px}
+.light{color:#1d1d1d}
+.light .lead{text-shadow:none}
+.light .sec-title h2{color:#fff}
+.banner{background:#4a1212;border:4px solid #000;box-shadow:6px 6px 0 #000;padding:14px 18px;margin-bottom:26px;font-size:22px;line-height:1.3}
+
+/* HUD */
+#progress{position:fixed;top:0;left:0;height:4px;width:0;background:var(--xp);z-index:950}
+#hud{position:fixed;top:0;left:0;right:0;z-index:800;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;padding:12px;pointer-events:none}
+#hud>*{pointer-events:auto}
+.hud-box{background:rgba(0,0,0,.55);border:2px solid #111;padding:6px 10px}
+.hearts{font-size:20px;color:var(--heart);text-shadow:2px 2px 0 #000;letter-spacing:1px}
+.xp{min-width:230px}
+.xp .lv{font-family:var(--px);font-size:10px;color:var(--xp);text-shadow:2px 2px 0 #000;display:flex;justify-content:space-between;gap:10px}
+.xp .track{height:10px;background:#222;border:2px solid #000;margin-top:6px}
+.xp .track i{display:block;height:100%;width:0;background:linear-gradient(#c8ff5a,#5EBC2E);transition:width .5s}
+.hud-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.hud-btns{display:flex;gap:6px}
+.hud-btn{font-size:20px;padding:4px 10px;background:rgba(0,0,0,.6);border:2px solid #222}
+.hud-btn:hover,.hud-btn.on{border-color:#fff}
+.hud-btn.on{box-shadow:0 0 10px var(--xp)}
+#debug{position:fixed;top:92px;left:14px;z-index:850;background:rgba(0,0,0,.7);font-size:18px;padding:10px 12px;display:none;line-height:1.35;color:#e8e8e8;white-space:pre;border:2px solid #222}
+body.f3 #debug{display:block}
+
+/* HOTBAR */
+#hotbar{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:900;display:flex;gap:6px;padding:6px;background:rgba(0,0,0,.65);border:3px solid #111;max-width:calc(100vw - 16px);overflow-x:auto}
+.slot{position:relative;width:60px;height:60px;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(139,139,139,.55);border:3px solid #000;box-shadow:inset 3px 3px 0 rgba(255,255,255,.35),inset -3px -3px 0 rgba(0,0,0,.4);color:#fff;text-decoration:none;font-size:24px;transition:transform .12s}
+.slot:hover{transform:translateY(-4px)}
+.slot.on{background:rgba(220,220,220,.95);border-color:#fff;box-shadow:0 0 0 3px #fff}
+.slot .k{position:absolute;top:2px;left:4px;font-family:var(--px);font-size:8px;color:#ddd}
+.slot .lbl{font-size:14px;line-height:1;margin-top:2px;text-shadow:1px 1px 0 #000}
+@media(max-width:760px){.slot{width:46px;height:46px;font-size:18px}.slot .lbl{display:none}}
+
+/* HERO */
+#home{position:relative;height:100vh;min-height:640px;overflow:hidden;background:#6ab0ff;display:flex;align-items:center}
+#world{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;cursor:crosshair;z-index:0;display:block}
+.hero-shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,.05) 60%),linear-gradient(transparent 60%,rgba(0,0,0,.3))}
+.hero-in{position:relative;z-index:2;width:min(1180px,92vw);margin:auto;display:grid;grid-template-columns:1.2fr .8fr;gap:44px;align-items:center;padding:110px 0 150px;pointer-events:none}
+.hero-in>*{pointer-events:auto}
+@media(max-width:860px){.hero-in{grid-template-columns:1fr;text-align:center;padding:110px 0 160px}.btns,.inv{justify-content:center}}
+.eyebrow{font-family:var(--px);font-size:10px;background:#000;display:inline-block;padding:9px 12px;border:3px solid #fff;color:var(--xp);line-height:1.6}
+.title{font-family:var(--px);font-size:clamp(22px,4.2vw,60px);line-height:1.2;margin:20px 0 14px;text-shadow:0 6px 0 #1f5a10,0 12px 0 #0b2a06,0 18px 0 #000;letter-spacing:1px;word-break:break-word}
+.title span{color:var(--grass)}
+.typed{font-size:clamp(22px,2.6vw,32px);min-height:1.4em;color:#ffffa0;text-shadow:2px 2px 0 #000}
+.caret{animation:blink 1s steps(1) infinite;color:var(--xp)}
+.lead-hero{font-size:clamp(20px,2vw,25px);max-width:640px;margin:14px 0 0;text-shadow:2px 2px 0 #000}
+.btns{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
+.inv{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.slotmini{background:rgba(0,0,0,.6);border:2px solid #111;padding:6px 10px;font-size:22px}
+.slotmini b{font-family:var(--px);font-size:12px;color:var(--gold);margin-left:4px}
+.hint{position:absolute;left:50%;bottom:92px;transform:translateX(-50%);z-index:2;font-size:19px;background:rgba(0,0,0,.6);padding:6px 12px;border:2px solid #111;pointer-events:none;white-space:nowrap;max-width:94vw;overflow:hidden;text-overflow:ellipsis}
+
+/* PORTRAIT */
+.portrait{margin:0;background:#1f1f1f;border:6px solid #000;box-shadow:inset 0 0 0 4px #3a3a3a,14px 14px 0 rgba(0,0,0,.55);padding:14px;max-width:400px;width:100%;justify-self:center;animation:float 4s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-10px)}}
+.pframe{position:relative;aspect-ratio:1/1;background:#000;overflow:hidden}
+.pframe img{width:100%;height:100%;object-fit:cover;display:block;image-rendering:pixelated}
+.fallback{position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(45deg,#2b2b2b 0 14px,#333 14px 28px);font-size:56px;color:var(--xp);text-shadow:4px 4px 0 #000}
+.fallback::after{content:'';position:absolute;left:0;right:0;bottom:0;height:20%;background:linear-gradient(#5EBC2E 0 14px,#79553A 14px)}
+.portrait figcaption{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap}
+.nametag{font-family:var(--px);font-size:10px;background:rgba(0,0,0,.6);padding:8px 10px}
+.credit{display:block;font-size:17px;color:#aaa;margin-top:10px;text-align:center}
+
+/* SECTIONS */
+.sec{position:relative;padding:110px 20px 140px}
+.wrap{max-width:1180px;margin:auto}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-bottom:34px}
+.stat{background:#c6c6c6;color:#222;border:4px solid #000;box-shadow:inset 3px 3px 0 #fff,inset -3px -3px 0 #555,8px 8px 0 #000;padding:18px;text-align:center}
+.stat b{display:block;font-family:var(--px);font-size:clamp(20px,3vw,34px);color:#1b5e20;margin-bottom:10px}
+.stat span{font-size:22px}
+.partial{font-size:20px;color:#ddd;margin:14px 0 0}
+
+/* PROFILE */
+.profile-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:26px;align-items:start}
+@media(max-width:860px){.profile-grid{grid-template-columns:1fr}}
+.pcard{background:#c6c6c6;color:#202020;border:4px solid #000;box-shadow:inset 4px 4px 0 #fff,inset -4px -4px 0 #555,10px 10px 0 rgba(0,0,0,.45);padding:26px}
+.pc-top{display:flex;gap:16px;align-items:center;margin-bottom:16px}
+.pc-av{width:104px;height:104px;flex:0 0 104px;border:4px solid #000;background:#3a3a3a;display:grid;place-items:center;overflow:hidden;color:#fff;font-family:var(--px);font-size:20px}
+.pc-av img{width:100%;height:100%;object-fit:cover;display:block;image-rendering:pixelated}
+.pc-name{font-size:14px;line-height:1.5;word-break:break-word}
+.pc-login{font-size:26px;color:#1b5e20}
+.pc-bio{font-size:24px;margin:0 0 16px;line-height:1.3}
+.pc-meta{display:grid;grid-template-columns:44px 1fr;gap:8px 10px;margin:0;font-size:22px}
+.pc-meta dd{margin:0;word-break:break-word}
+.pc-meta a{color:#1b5e20}
+.pstats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media(max-width:520px){.pstats{grid-template-columns:1fr}}
+.pstats .stat{box-shadow:inset 3px 3px 0 #fff,inset -3px -3px 0 #555,6px 6px 0 #000}
+.links{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+
+/* REPO CHEST */
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:22px}
+.filter{padding:8px 12px;background:#4b4b4b;border:3px solid #000;color:#fff;font-size:20px}
+.filter.on{background:var(--grass);color:#000}
+.search,.sort{background:#000;color:var(--xp);border:3px solid #555;padding:10px 14px}
+.search{flex:1;min-width:200px}
+.chest{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;background:#3a3a3a;border:6px solid #000;padding:18px;box-shadow:inset 0 0 0 4px #8b8b8b,12px 12px 0 #000}
+.item{position:relative;display:flex;flex-direction:column;gap:6px;text-align:left;min-height:250px;background:#6f6f6f;border:4px solid var(--rc);box-shadow:inset 3px 3px 0 #999,inset -3px -3px 0 #444;padding:14px;color:#fff;transition:transform .15s}
+.item:hover,.item:focus-visible{transform:translateY(-5px)}
+.item.featured{box-shadow:inset 3px 3px 0 #999,inset -3px -3px 0 #444,0 0 0 3px var(--gold)}
+.item .big{font-size:50px;text-align:center;margin:8px 0 2px}
+.item h5{font-family:var(--px);font-size:10px;line-height:1.6;word-break:break-word;text-shadow:2px 2px 0 #000}
+.item .desc{font-size:19px;color:#eee;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:0;line-height:1.2}
+.item .meta{font-size:19px;text-shadow:1px 1px 0 #000;margin-top:auto}
+.item .rar{position:absolute;top:8px;right:8px;font-family:var(--px);font-size:8px;padding:4px 6px;background:#000;color:var(--rc);text-transform:uppercase}
+.item .feat{position:absolute;top:8px;left:8px;font-family:var(--px);font-size:8px;padding:4px 6px;background:var(--gold);color:#000}
+.empty{font-size:12px;grid-column:1/-1;color:#ccc}
+.chest-count{margin-top:18px;font-size:22px;color:#ccc}
+
+/* ADVANCEMENTS */
+.adv-head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.adv-bar{height:22px;background:#111;border:4px solid #000;margin-bottom:28px}
+.adv-bar i{display:block;height:100%;width:0;background:repeating-linear-gradient(90deg,#7CFC00 0 14px,#4a9e00 14px 18px);transition:width 1s}
+.ach{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.ach-card{display:flex;gap:14px;align-items:center;background:#202020;border:3px solid #000;box-shadow:6px 6px 0 #000;padding:14px;filter:grayscale(1);opacity:.55}
+.ach-card.got{filter:none;opacity:1}
+.ach-card .ai{width:64px;height:64px;flex:0 0 64px;display:grid;place-items:center;font-size:30px;background:#3a3a3a;border:3px solid #000}
+.ach-card.got .ai{background:var(--grass)}
+.ach-card h6{font-family:var(--px);font-size:10px;margin:0 0 6px;color:var(--gold);line-height:1.6}
+.ach-card.got h6{color:var(--xp)}
+.ach-card p{margin:0;font-size:20px;color:#bbb;line-height:1.15}
+
+/* SKILLS */
+.skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center}
+@media(max-width:820px){.skills-grid{grid-template-columns:1fr}}
+.skill{margin:20px 0}
+.skill .row{display:flex;justify-content:space-between;font-family:var(--px);font-size:10px;margin-bottom:10px;text-shadow:2px 2px 0 #000;gap:10px;line-height:1.6;flex-wrap:wrap}
+#radar{width:100%;max-width:480px;height:auto;aspect-ratio:480/440;display:block;margin:auto}
+
+/* ACTIVITY */
+.act-grid{display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:start}
+@media(max-width:820px){.act-grid{grid-template-columns:1fr}}
+.heat{display:grid;grid-template-columns:repeat(7,30px);gap:6px;width:max-content;max-width:100%}
+.hc{width:30px;height:30px;border:3px solid #000;display:block;background:#1d2b1d}
+.hc.l1{background:#2f6b1f}.hc.l2{background:#4ea83a}.hc.l3{background:#7CFC00}
+.heat-cap{font-size:20px;color:#bbb;margin-top:12px}
+.act-stats{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:22px;margin:0 0 16px}
+.act-stats b{color:var(--gold)}
+.evs{list-style:none;padding:0;margin:0}
+.evs li{display:grid;grid-template-columns:40px 1fr auto;gap:10px;align-items:center;background:#202020;border:3px solid #000;padding:10px 12px;margin-bottom:10px;font-size:21px}
+.evs a{color:var(--gold);word-break:break-all}
+.evs time{color:#999;font-size:18px;white-space:nowrap}
+
+/* CRAFT */
+.craft{display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:start}
+@media(max-width:800px){.craft{grid-template-columns:1fr}}
+.cgrid{display:grid;grid-template-columns:repeat(4,104px);gap:8px;background:#8b8b8b;border:4px solid #000;padding:12px;width:max-content;max-width:100%;margin:auto}
+.cslot{width:104px;height:84px;background:#373737;border:3px solid #000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px}
+.cslot:hover{border-color:#fff}
+.cslot.sel{border-color:var(--xp);box-shadow:0 0 14px var(--xp)}
+.cslot span{font-size:26px;line-height:1}
+.cslot small{font-family:var(--mono);font-size:18px;color:#ddd;line-height:1.1;margin-top:4px}
+.cout{min-height:170px;background:#373737;border:4px dashed var(--xp);padding:18px;font-size:24px;line-height:1.4;display:grid;place-items:center;text-align:center}
+.recipes{margin-top:34px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.recipe{background:#202020;border:3px solid #000;padding:14px;font-size:21px;color:#999;line-height:1.2}
+.recipe.got{border-color:var(--grass);color:#fff}
+.recipe h6{font-family:var(--px);font-size:10px;color:var(--gold);margin:0 0 8px;line-height:1.6}
+
+/* MAIL */
+.mailgrid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:820px){.mailgrid{grid-template-columns:1fr}}
+.field{width:100%;background:#000;color:var(--xp);border:3px solid #555;padding:12px;margin:8px 0 14px}
+textarea.field{min-height:150px;resize:vertical}
+.info p{font-size:23px;margin:0 0 12px}
+.counter{font-size:18px;color:#444;text-align:right;margin-top:-8px}
+
+/* FOOTER */
+footer{background:#0a0a0a;border-top:6px solid #000;padding:34px 20px 44px;text-align:center;color:#999;font-size:20px}
+footer .px{color:#fff;font-size:11px;margin-bottom:14px;line-height:1.8}
+footer .row{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:16px 0}
+
+/* MODAL */
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;z-index:1000;padding:16px}
+#modal.open{display:flex}
+.mbox{width:min(680px,96vw);max-height:92vh;overflow:auto;background:#c6c6c6;color:#222;border:4px solid #000;box-shadow:inset 4px 4px 0 #fff,12px 12px 0 #000}
+.mhead{background:#4a4a4a;color:#fff;font-family:var(--px);font-size:11px;padding:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:4px solid #000;line-height:1.6}
+.mhead button{font-family:var(--px);font-size:12px;background:#8b0000;border:3px solid #000;padding:6px 10px}
+.mbody{padding:22px;font-size:24px}
+.mbody dl{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;margin:0 0 16px;align-items:center}
+.mbody dt{font-family:var(--px);font-size:9px;color:#444}
+.mbody dd{margin:0;font-size:24px;word-break:break-word}
+.mdesc{font-size:25px;line-height:1.35;margin:0 0 16px}
+.topics{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.topic{background:#2b5a1c;color:#fff;border:2px solid #000;padding:2px 8px;font-size:20px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.clone{display:block;background:#000;color:var(--xp);padding:12px;font-size:20px;margin-top:14px;word-break:break-all;border:3px solid #333}
+
+/* CONSOLE */
+#console{position:fixed;left:14px;bottom:84px;width:min(620px,94vw);z-index:1100;background:rgba(8,8,8,.96);border:4px solid #000;box-shadow:8px 8px 0 #000;display:none;flex-direction:column}
+#console.open{display:flex}
+#conLog{height:240px;overflow:auto;padding:12px;font-size:20px;color:#bfffbf;white-space:pre-wrap;line-height:1.3}
+#conLog .cmd{color:#fff}
+#conLog .err{color:#ff8a80}
+#conIn{width:100%;background:#000;color:var(--xp);border:0;border-top:3px solid #333;padding:12px;outline:none}
+
+/* TOASTS */
+#toasts{position:fixed;right:14px;top:86px;z-index:3000;display:flex;flex-direction:column;gap:10px;width:min(380px,92vw)}
+.toast{background:#202020;border:3px solid #fff;padding:12px 14px;box-shadow:6px 6px 0 #000;animation:slide .35s ease;display:flex;gap:12px;align-items:center;transition:opacity .4s}
+.toast .ti{font-size:26px;width:46px;height:46px;flex:0 0 46px;background:var(--grass);border:3px solid #000;display:grid;place-items:center}
+.toast b{font-family:var(--px);font-size:9px;color:var(--gold);display:block;margin-bottom:6px;line-height:1.6}
+.toast span{font-size:20px;color:#ddd;line-height:1.2}
+.toast.out{opacity:0}
+@keyframes slide{from{transform:translateX(120%)}}
+
+/* UPSIDE DOWN */
+body.upside::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:700;background:radial-gradient(ellipse at center,transparent 50%,rgba(140,0,0,.5) 100%);animation:flick 3s infinite steps(1)}
+@keyframes flick{0%,100%{opacity:1}92%{opacity:.7}94%{opacity:1}97%{opacity:.45}}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader" class="dirt" role="status">
+  <div class="lbox">
+    <div class="ltitle">JENSLINJEMZ<br>DEVELOPER WORLD</div>
+    <div class="blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="bar"><i id="ldBar"></i></div>
+    <p id="ldTxt" style="margin-top:14px">Connecting to api.github.com…</p>
+    <p style="font-size:19px;color:#ddd">Tip: click the ground to walk and mine · press / for commands</p>
+  </div>
+</div>
+
+<canvas id="fx"></canvas>
+<div id="progress"></div>
+
+<!-- HUD -->
+<div id="hud">
+  <div class="hud-box hearts" aria-hidden="true">❤❤❤❤❤❤❤❤❤❤</div>
+  <div class="hud-box xp">
+    <div class="lv"><span>LVL <b id="lvl">1</b></span><span id="xpTxt">0/200 XP</span></div>
+    <div class="track"><i id="xpBar"></i></div>
+  </div>
+  <div class="hud-right">
+    <div class="hud-box" id="clock">--:-- CT</div>
+    <div class="hud-btns">
+      <button class="hud-btn" id="btnSound" title="Sound (M)" aria-label="Toggle sound">🔊</button>
+      <button class="hud-btn" id="btnUp" title="Upside Down (U)" aria-label="Toggle Upside Down">🌀</button>
+      <button class="hud-btn" id="btnRain" title="Rain (R)" aria-label="Toggle rain">🌧️</button>
+      <button class="hud-btn" id="btnCon" title="Console (/)" aria-label="Open console">⌨️</button>
+    </div>
+  </div>
+</div>
+<pre id="debug"></pre>
+<div id="toasts" aria-live="polite"></div>
+
+<!-- CONSOLE -->
+<div id="console" role="dialog" aria-label="Command console">
+  <div id="conLog"></div>
+  <input id="conIn" autocomplete="off" placeholder="type a command, e.g. help">
+</div>
+
+<!-- HOTBAR -->
+<nav id="hotbar" aria-label="Sections">
+  <a class="slot on" href="#home"><span class="k">1</span>🏠<span class="lbl">Spawn</span></a>
+  <a class="slot" href="#profile"><span class="k">2</span>👤<span class="lbl">Profile</span></a>
+  <a class="slot" href="#chest"><span class="k">3</span>📦<span class="lbl">Repos</span></a>
+  <a class="slot" href="#tree"><span class="k">4</span>🌳<span class="lbl">Adv</span></a>
+  <a class="slot" href="#skills"><span class="k">5</span>✨<span class="lbl">Skills</span></a>
+  <a class="slot" href="#activity"><span class="k">6</span>⚡<span class="lbl">Activity</span></a>
+  <a class="slot" href="#craft"><span class="k">7</span>⚒️<span class="lbl">Craft</span></a>
+  <a class="slot" href="#mail"><span class="k">8</span>✉️<span class="lbl">Mail</span></a>
+</nav>
+
+<main>
+<!-- HERO -->
+<header id="home">
+  <canvas id="world" aria-label="Pixel world. Click the ground to walk, click near your character to mine."></canvas>
+  <div class="hero-shade"></div>
+  <div class="hero-in">
+    <div>
+      <span class="eyebrow" id="heroEye">★ GITHUB · LOADING ★</span>
+      <h1 class="title"><span id="heroName">JENSLINJEMZ</span></h1>
+      <div class="typed"><span id="tt"></span><span class="caret">▌</span></div>
+      <p class="lead-hero" id="heroLead">Developer portfolio, built live from public GitHub data.</p>
+      <div class="btns">
+        <a class="btn g" href="#profile">▶ Enter world</a>
+        <a class="btn" href="#chest">📦 Repo chest</a>
+        <a class="btn" href="#mail">✉ Message</a>
+      </div>
+      <div class="inv" aria-label="Inventory">
+        <span class="slotmini">🟩 <b id="invG">0</b></span>
+        <span class="slotmini">🟫 <b id="invD">0</b></span>
+        <span class="slotmini">⬜ <b id="invS">0</b></span>
+        <span class="slotmini">⛏ <b id="mineCount">0</b> mined</span>
+      </div>
+    </div>
+    <figure class="portrait">
+      <div class="pframe">
+        <img id="avImg" alt="GitHub avatar" hidden>
+        <div class="fallback" id="avFb"><span id="avInit">JJ</span></div>
+      </div>
+      <figcaption>
+        <span class="nametag" id="heroNick">@JENSLINJEMZ</span>
+        <a class="btn sm" id="ghLink" href="https://github.com/JENSLINJEMZ" target="_blank" rel="noopener">GitHub ↗</a>
+      </figcaption>
+      <small class="credit">Your GitHub avatar is your in-world skin.</small>
+    </figure>
+  </div>
+  <div class="hint">Click ground: walk / mine · 1–8 sections · / console · U Upside Down · R rain</div>
+</header>
+
+<!-- PROFILE -->
+<section class="sec dirt reveal" id="profile">
+  <div class="wrap">
+    <div class="sec-title"><h2>👤 PLAYER PROFILE</h2></div>
+    <p class="lead">Everything here comes from the GitHub profile. Update your bio, location, or website on GitHub and this page picks it up.</p>
+    <div id="banner" class="banner" hidden></div>
+    <div class="profile-grid">
+      <div class="pcard" id="profCard"></div>
+      <div>
+        <div class="pstats">
+          <div class="stat"><b id="statRepos" data-to="0">0</b><span>public repos</span></div>
+          <div class="stat"><b id="statStars" data-to="0">0</b><span>stars earned</span></div>
+          <div class="stat"><b id="statFollowers" data-to="0">0</b><span>followers</span></div>
+          <div class="stat"><b id="statFollowing" data-to="0">0</b><span>following</span></div>
+          <div class="stat"><b id="statGists" data-to="0">0</b><span>public gists</span></div>
+          <div class="stat"><b id="statYears" data-to="0">0</b><span>years on GitHub</span></div>
+        </div>
+        <p class="partial" id="partialNote"></p>
+        <div class="links" id="profLinks"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REPO CHEST -->
+<section class="sec reveal" id="chest" style="background:#2b1d0e">
+  <div class="wrap">
+    <div class="sec-title"><h2>📦 REPO CHEST · PROJECTS</h2></div>
+    <p class="lead">Every public repo is an item. Rarity comes from stars. Click one to inspect it or copy its clone command.</p>
+    <div class="toolbar">
+      <div id="cChips" style="display:contents"></div>
+      <input class="search" id="cSearch" placeholder="Search name, topic, language…" aria-label="Search repositories">
+      <select class="sort" id="cSort" aria-label="Sort repositories">
+        <option value="stars">Most stars</option>
+        <option value="updated">Recently updated</option>
+        <option value="name">Name A–Z</option>
+        <option value="oldest">Oldest first</option>
+      </select>
+    </div>
+    <div class="chest" id="chestGrid"></div>
+    <p class="chest-count" id="chestCount"></p>
+  </div>
+</section>
+
+<!-- ADVANCEMENTS -->
+<section class="sec light reveal" id="tree" style="background:linear-gradient(#87CEEB,#dff4ff)">
+  <div class="wrap">
+    <div class="sec-title"><h2>🌳 ADVANCEMENT TREE · MILESTONES</h2></div>
+    <p class="lead">Milestones unlock from your real GitHub numbers. Explorer advancements unlock by using this page.</p>
+    <div class="adv-head">
+      <h3 class="px" style="font-size:14px;color:#1d1d1d;text-shadow:2px 2px 0 #fff">PROGRESS</h3>
+      <span class="px" style="font-size:11px;color:#1d1d1d">UNLOCKED <span id="advCount">0</span>/<span id="advTotal">0</span></span>
+    </div>
+    <div class="adv-bar"><i id="advBar"></i></div>
+    <div class="ach" id="advGrid"></div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="sec reveal" id="skills" style="background:linear-gradient(#141414,#262626)">
+  <div class="wrap">
+    <div class="sec-title"><h2>✨ ENCHANTING TABLE · LANGUAGES</h2></div>
+    <p class="lead">Language share from your own (non-fork) repos. Not a skill test, just a map of what you build with.</p>
+    <div class="skills-grid">
+      <canvas id="radar" width="480" height="440" aria-label="Language radar chart"></canvas>
+      <div id="langBars"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ACTIVITY -->
+<section class="sec reveal" id="activity" style="background:#1b1b1b">
+  <div class="wrap">
+    <div class="sec-title"><h2>⚡ REDSTONE LOG · RECENT ACTIVITY</h2></div>
+    <p class="lead">From the public event feed. GitHub only keeps recent events, so older activity won't appear.</p>
+    <div class="act-stats" id="actStats"></div>
+    <div class="act-grid">
+      <div>
+        <div class="heat" id="heat" aria-label="Activity heatmap, last 35 days"></div>
+        <p class="heat-cap">Last 35 days · darker = quieter</p>
+      </div>
+      <ul class="evs" id="evList"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- CRAFT -->
+<section class="sec dirt reveal" id="craft">
+  <div class="wrap">
+    <div class="sec-title"><h2>⚒️ CRAFTING TABLE · STACK RECIPES</h2></div>
+    <p class="lead">Pick exactly three languages. A recipe crafts only if all three appear in your public repos.</p>
+    <div class="panel craft">
+      <div>
+        <div class="cgrid" id="cgrid"></div>
+        <div style="text-align:center;margin-top:16px"><button class="btn sm" id="cClear" type="button">CLEAR GRID</button></div>
+      </div>
+      <div class="cout" id="cout" aria-live="polite"></div>
+    </div>
+    <div class="recipes" id="recipes"></div>
+  </div>
+</section>
+
+<!-- MAIL -->
+<section class="sec reveal" id="mail" style="background:linear-gradient(#0d1b0d,#1e3a1e)">
+  <div class="wrap">
+    <div class="sec-title"><h2>✉️ MAILBOX · CONTACT</h2></div>
+    <div class="mailgrid">
+      <div class="panel info">
+        <h3 class="px" style="font-size:12px;margin-bottom:16px">ABOUT</h3>
+        <p id="mInfoBio">Build something together, ask about a repo, or just say hi.</p>
+        <p>🔗 Follow on GitHub and open issues on public repos.</p>
+        <div class="links" style="margin-top:20px">
+          <a class="btn sm" id="mProfile" href="https://github.com/JENSLINJEMZ" target="_blank" rel="noopener">🐙 GitHub profile</a>
+          <button class="btn sm" id="exportTxt" type="button">📄 Export profile card</button>
+        </div>
+      </div>
+      <form class="panel" id="mForm" novalidate>
+        <h3 class="px" style="font-size:12px;margin-bottom:12px">SEND A LETTER</h3>
+        <input class="field" id="mName" placeholder="Your name / gamertag" maxlength="80" aria-label="Your name">
+        <input class="field" id="mEmail" type="email" placeholder="Your email" maxlength="120" aria-label="Your email">
+        <select class="field" id="mSubj" aria-label="Subject">
+          <option>Hello</option><option>Collaboration</option><option>Job / freelance</option><option>Question about a repo</option><option>Bug report</option>
+        </select>
+        <textarea class="field" id="mMsg" placeholder="Write something kind…" maxlength="800" aria-label="Message"></textarea>
+        <div class="counter"><span id="mCount">0</span>/800</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn g" type="submit">📤 SEND</button>
+          <button class="btn sm" type="button" id="mCopy">📋 Copy message</button>
+        </div>
+        <p style="font-size:19px;color:#aaa;margin:14px 0 0">Opens your email app when the owner has set an address. Otherwise the message is copied for you.</p>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="px">⛏ JENSLINJEMZ · DEVELOPER PORTFOLIO ⛏</div>
+  <p>Fan-made, Minecraft-style portfolio built from the public GitHub REST API. Not affiliated with GitHub, Microsoft, or Mojang. Profile details come from GitHub and may change.</p>
+  <div class="row">
+    <a class="btn sm" href="#home">⬆ Back to top</a>
+    <button class="btn sm" id="refreshBtn" type="button">🔄 Refresh data</button>
+  </div>
+  <p style="font-size:18px;color:#666">Tip: open the console with <b>/</b> and type <b>help</b>. Try <b>?user=name</b> in the URL to view another account.</p>
+</footer>
+
+<!-- MODAL -->
+<div id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="mbox">
+    <div class="mhead"><span id="mTitle">ITEM</span><button id="mClose" type="button" aria-label="Close">✕</button></div>
+    <div class="mbody" id="mBody"></div>
+  </div>
+</div>
+
+<script>
+/* ================= 1. CONFIG & STATE ================= */
+const CONFIG={
+  user:'JENSLINJEMZ',       // default GitHub username (override with ?user=name)
+  featured:'Minecraft_UI',  // repo name to highlight as FEATURED
+  email:'',                 // your address to receive mailbox messages, e.g. you@example.com
+  cacheMinutes:60           // how long GitHub responses are cached in this browser
+};
+const qs=new URLSearchParams(location.search);
+const USER=/^[A-Za-z0-9-]{1,39}$/.test(qs.get('user')||'')?qs.get('user'):CONFIG.user;
+
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safeUrl=u=>esc(/^https?:\/\//i.test(u)?u:'https://'+u);
+const mix=(a,b,t)=>a.map((v,i)=>v+(b[i]-v)*t);
+const rgb=c=>`rgb(${c[0]|0},${c[1]|0},${c[2]|0})`;
+const hash=(x,y)=>{let n=Math.imul(x,73856093)^Math.imul(y,19349663);n=Math.imul(n^(n>>>13),1274126177);return((n>>>0)%1000)/1000};
+const fmt=n=>Number(n||0).toLocaleString('en-US');
+const dateFmt=iso=>iso?new Date(iso).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}):'—';
+const ago=iso=>{
+  if(!iso) return '—';
+  const s=(Date.now()-new Date(iso))/1000;
+  const units=[['year',31536000],['month',2592000],['week',604800],['day',86400],['hour',3600],['minute',60]];
+  for(const [n,v] of units){const k=Math.floor(s/v); if(k>=1) return `${k} ${n}${k>1?'s':''} ago`;}
+  return 'just now';
+};
+
+const store={
+  get(k,d){try{const v=localStorage.getItem('jj_'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem('jj_'+k,JSON.stringify(v));return true}catch(e){return false}},
+  clear(){Object.keys(localStorage).filter(k=>k.startsWith('jj_')).forEach(k=>localStorage.removeItem(k))}
+};
+
+const S={
+  xpMine:store.get('xpMine',0),
+  inv:store.get('inv',{grass:0,dirt:0,stone:0}),
+  mined:store.get('mined',0),
+  localAch:store.get('localAch',[]),
+  crafted:store.get('crafted',[]),
+  sound:store.get('sound',true),
+  rain:false,upside:false,timeOverride:null
+};
+
+let D=null, staleUsed=false, dataReady=false;
+const SEC=['home','profile','chest','tree','skills','activity','craft','mail'];
+
+/* ================= 2. AUDIO / TOASTS ================= */
+let actx=null;
+function beep(f,d=.08,type='square',v=.05,delay=0){
+  if(!S.sound) return;
+  try{
+    actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+    if(actx.state==='suspended') actx.resume();
+    const t=actx.currentTime+delay, o=actx.createOscillator(), gn=actx.createGain();
+    o.type=type; o.frequency.setValueAtTime(f,t);
+    gn.gain.setValueAtTime(v,t); gn.gain.exponentialRampToValueAtTime(.0001,t+d);
+    o.connect(gn).connect(actx.destination); o.start(t); o.stop(t+d+.02);
+  }catch(e){}
+}
+const SFX={
+  click:()=>beep(440,.04),
+  pop:()=>{beep(600,.06);beep(900,.08,'square',.05,.06)},
+  mine:()=>{beep(180,.08);beep(120,.1,'sawtooth',.05,.03)},
+  level:()=>[523,659,784,1046].forEach((f,i)=>beep(f,.15,'square',.05,i*.1)),
+  toast:()=>beep(988,.1,'triangle',.05),
+  low:()=>beep(90,.4,'sawtooth',.06)
+};
+function toast(icon,title,msg,sound=true){
+  const box=$('#toasts'), d=document.createElement('div');
+  d.className='toast';
+  d.innerHTML=`<div class="ti">${icon}</div><div><b>${esc(title)}</b><span>${esc(msg)}</span></div>`;
+  box.appendChild(d);
+  if(sound) SFX.toast();
+  while(box.children.length>4) box.firstElementChild.remove();
+  setTimeout(()=>{d.classList.add('out');setTimeout(()=>d.remove(),450)},3800);
+}
+async function copyText(text,msg){
+  try{ await navigator.clipboard.writeText(text); toast('📋','COPIED',msg); }
+  catch(e){ toast('⚠️','COPY FAILED','Select the text and copy it manually.'); }
+}
+function download(name,text){
+  const b=new Blob([text],{type:'text/plain'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(b); a.download=name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+
+/* ================= 3. GITHUB DATA ================= */
+function emptyData(){
+  return {
+    source:'offline', error:null,
+    user:{login:USER,name:null,avatar_url:null,html_url:`https://github.com/${USER}`,bio:null,location:null,company:null,blog:null,twitter_username:null,followers:0,following:0,public_repos:0,public_gists:0,created_at:null},
+    repos:[], events:[], langs:[],
+    counts:{repos:0,stars:0,followers:0,recent:0,years:0,langs:0,featured:false}
+  };
+}
+async function fetchGH(path){
+  const r=await fetch('https://api.github.com'+path,{headers:{Accept:'application/vnd.github+json'}});
+  if(r.status===403||r.status===429) throw Object.assign(new Error('rate'),{code:'RATE'});
+  if(r.status===404) throw Object.assign(new Error('notfound'),{code:'NOTFOUND'});
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  return r.json();
+}
+async function cached(key,fn){
+  const k='jj_gh_'+key;
+  let stale=null;
+  try{ stale=JSON.parse(localStorage.getItem(k)||'null'); }catch(e){}
+  if(stale && Date.now()-stale.t<CONFIG.cacheMinutes*60000) return stale.v;
+  try{
+    const v=await fn();
+    try{ localStorage.setItem(k,JSON.stringify({t:Date.now(),v})); }catch(e){}
+    return v;
+  }catch(err){
+    if(stale){ staleUsed=true; return stale.v; }
+    throw err;
+  }
+}
+function langStats(repos){
+  const m={};
+  repos.filter(r=>!r.fork&&r.language).forEach(r=>m[r.language]=(m[r.language]||0)+1);
+  const total=Object.values(m).reduce((a,b)=>a+b,0)||1;
+  return Object.entries(m).sort((a,b)=>b[1]-a[1]).map(([name,n])=>({name,n,pct:Math.round(n/total*100)}));
+}
+async function loadAll(){
+  const enc=encodeURIComponent(USER);
+  staleUsed=false;
+  const user=await cached('user:'+USER,()=>fetchGH(`/users/${enc}`));
+  const repos=await cached('repos:'+USER,()=>fetchGH(`/users/${enc}/repos?per_page=100&sort=updated`)).catch(()=>[]);
+  const events=await cached('events:'+USER,()=>fetchGH(`/users/${enc}/events/public?per_page=100`)).catch(()=>[]);
+  const d=emptyData();
+  const list=Array.isArray(repos)?repos:[];
+  const evs=Array.isArray(events)?events:[];
+  const own=list.filter(r=>!r.fork);
+  const now=Date.now();
+  d.user={...d.user,...user};
+  d.repos=list; d.events=evs;
+  d.langs=langStats(list);
+  d.partial=list.length>=100;
+  d.counts={
+    repos:user.public_repos??own.length,
+    stars:own.reduce((a,r)=>a+(r.stargazers_count||0),0),
+    followers:user.followers||0,
+    recent:evs.filter(e=>now-new Date(e.created_at)<30*864e5).length,
+    years:user.created_at?Math.floor((now-new Date(user.created_at))/(365.25*864e5)):0,
+    langs:d.langs.length,
+    featured:list.some(r=>r.name.toLowerCase()===CONFIG.featured.toLowerCase())
+  };
+  d.source=staleUsed?'cache':'live';
+  return d;
+}
+
+/* ================= 4. XP, LEVELS & ADVANCEMENTS ================= */
+const dataXP=()=>{const c=D.counts;return c.repos*25+c.stars*10+c.followers*5+Math.min(c.recent,100)*2+c.years*50};
+const totalXP=()=>(D?dataXP():0)+S.xpMine;
+const level=()=>Math.floor(totalXP()/200)+1;
+function renderHUD(){
+  const into=totalXP()%200;
+  $('#lvl').textContent=level();
+  $('#xpTxt').textContent=`${into}/200 XP`;
+  $('#xpBar').style.width=(into/200*100)+'%';
+}
+function addXP(n){
+  const before=level();
+  S.xpMine+=n; store.set('xpMine',S.xpMine); renderHUD();
+  if(level()>before){ SFX.level(); toast('⭐','LEVEL UP!','You reached level '+level()+'.',false); }
+}
+
+const MILES=[
+  {id:'first-repo',i:'📁',n:'First Block',d:'Create a public repository.',ok:c=>c.repos>=1},
+  {id:'five-repos',i:'🧱',n:'Builder',d:'Reach 5 public repos.',ok:c=>c.repos>=5},
+  {id:'ten-repos',i:'🏰',n:'Architect',d:'Reach 10 public repos.',ok:c=>c.repos>=10},
+  {id:'first-star',i:'⭐',n:'Star Struck',d:'Earn your first star.',ok:c=>c.stars>=1},
+  {id:'ten-stars',i:'🌟',n:'Stargazer',d:'Earn 10 stars.',ok:c=>c.stars>=10},
+  {id:'fifty-stars',i:'💎',n:'Diamond Repo',d:'Earn 50 stars.',ok:c=>c.stars>=50},
+  {id:'first-follower',i:'👥',n:'Party Member',d:'Gain a follower.',ok:c=>c.followers>=1},
+  {id:'ten-followers',i:'🎉',n:'Village Leader',d:'Gain 10 followers.',ok:c=>c.followers>=10},
+  {id:'polyglot',i:'🧪',n:'Polyglot',d:'Build with 3 or more languages.',ok:c=>c.langs>=3},
+  {id:'year1',i:'📅',n:'Survived a Year',d:'Have a GitHub account for a year.',ok:c=>c.years>=1},
+  {id:'active',i:'⚡',n:'Active Miner',d:'Show public activity in the last 30 days.',ok:c=>c.recent>0},
+  {id:'featured',i:'🏆',n:'Featured Build',d:'Have the featured repo on the profile.',ok:c=>c.featured}
+];
+const LOCAL=[
+  {id:'walk',i:'🚶',n:'First Steps',d:'Walk your character across the world.'},
+  {id:'dig',i:'⛏️',n:'Hole Digger',d:'Mine 25 blocks of ground.'},
+  {id:'console',i:'💻',n:'Command Block',d:'Run a console command.'},
+  {id:'craft',i:'⚒️',n:'Master Performance',d:'Craft a recipe you can actually make.'},
+  {id:'upside',i:'🌀',n:'Upside Down',d:'Enter the Upside Down.'},
+  {id:'mail',i:'✉️',n:'Dear Creator',d:'Send a message through the mailbox.'}
+];
+function unlockLocal(id){
+  if(S.localAch.includes(id)) return;
+  S.localAch.push(id); store.set('localAch',S.localAch);
+  const a=LOCAL.find(x=>x.id===id);
+  toast(a.i,'ADVANCEMENT MADE!',a.n);
+  addXP(25); renderAdv();
+}
+function allAdv(){
+  const c=D.counts;
+  return [
+    ...MILES.map(m=>({...m,got:!!m.ok(c)})),
+    ...LOCAL.map(m=>({...m,got:S.localAch.includes(m.id)}))
+  ];
+}
+function renderAdv(){
+  const list=allAdv(), got=list.filter(a=>a.got).length;
+  $('#advGrid').innerHTML=list.map(a=>`
+    <div class="ach-card ${a.got?'got':''}">
+      <div class="ai">${a.got?a.i:'❔'}</div>
+      <div><h6>${esc(a.n)}</h6><p>${esc(a.d)}</p></div>
+    </div>`).join('');
+  $('#advCount').textContent=got;
+  $('#advTotal').textContent=list.length;
+  $('#advBar').style.width=(got/list.length*100)+'%';
+}
+
+/* ================= 5. HERO WORLD ================= */
+const cv=$('#world'), g=cv.getContext('2d');
+const bgc=document.createElement('canvas'), bgx=bgc.getContext('2d');
+let W=320,H=180,base=[],terrain=[],trees=[],clouds=[],stars=[],drops=[],flies=[];
+const P={x:110,tx:110,dir:1,step:0,swing:0};
+let frameN=0,heroVisible=true,curT=0;
+
+const PAL={
+  day:{g1:'#5EBC2E',g2:'#4fae22',d1:'#79553A',d2:'#6b4a31',s:['#6f6f6f','#8a8a8a','#7a7a7a'],deep:'#2e2e2e',ore:'#d9b44a',leaf:['#2f7a1c','#3f9a2a'],trunk:'#5b3b1d',sky:[[106,176,255],[190,226,255]],night:[[8,12,36],[28,38,80]],hills:[40,60,90]},
+  up:{g1:'#5a1414',g2:'#430f0f',d1:'#2c1010',d2:'#240b0b',s:['#3b2222','#4a2a2a','#432626'],deep:'#1a0a0a',ore:'#ff5a3a',leaf:['#4a0c0c','#5e1414'],trunk:'#2a0b0b',sky:[[40,6,10],[96,18,22]],night:[[40,6,10],[96,18,22]],hills:[60,16,20]}
+};
+const pal=()=>PAL[S.upside?'up':'day'];
+const COL={shirt:'#3d7ddb',shirtD:'#2a5aa3',jeans:'#2f3f6f',boot:'#3b2a1a',skin:'#F2C29B'};
+
+/* Head sprite: the GitHub avatar, downscaled to 10x10 once */
+const headC=document.createElement('canvas'); headC.width=10; headC.height=10;
+const hc=headC.getContext('2d');
+let headReady=false, AV=null;
+function setAvatar(url){
+  if(!url) return;
+  AV=new Image();
+  AV.onload=()=>{
+    hc.imageSmoothingEnabled=true; hc.clearRect(0,0,10,10);
+    hc.drawImage(AV,0,0,10,10); headReady=true;
+    $('#avImg').src=url; $('#avImg').hidden=false; $('#avFb').hidden=true;
+  };
+  AV.onerror=()=>{ $('#avFb').hidden=false; };
+  AV.src=url;
+}
+
+function resizeWorld(){
+  const r=cv.getBoundingClientRect();
+  if(!r.width||!r.height) return;
+  H=Math.round(clamp(W*r.height/r.width,150,260));
+  cv.width=W; cv.height=H; bgc.width=W; bgc.height=H;
+  g.imageSmoothingEnabled=false;
+  genWorld();
+}
+function genWorld(){
+  const s=rnd(0,10);
+  base=[];
+  for(let x=0;x<W;x++) base[x]=Math.round(H*.7+Math.sin(x*.04+s)*H*.05+Math.sin(x*.11+s*2)*H*.018);
+  terrain=base.slice();
+  trees=Array.from({length:14},()=>({x:Math.floor(rnd(6,W-6)),h:Math.floor(rnd(5,9))}));
+  clouds=Array.from({length:8},()=>({x:rnd(0,W),y:rnd(H*.08,H*.34),w:Math.floor(rnd(14,32)),s:rnd(.04,.14)}));
+  stars=Array.from({length:90},()=>({x:Math.random()*W,y:Math.random()*H*.6,a:Math.random()*6.28}));
+  drops=Array.from({length:110},()=>({x:Math.random()*W,y:Math.random()*H,v:rnd(1.6,3.2)}));
+  flies=Array.from({length:22},()=>({x:Math.random()*W,y:H*rnd(.55,.85),p:Math.random()*6.28}));
+  P.x=clamp(P.x,4,W-5); P.tx=P.x;
+  rebuildBG();
+}
+function drawColumn(x){
+  const p=pal(), t=terrain[x];
+  bgx.clearRect(x,0,1,H);
+  for(let y=t;y<H;y++){
+    const d=y-t, n=hash(x,y);
+    let c;
+    if(d===0) c=n<.5?p.g1:p.g2;
+    else if(d<3) c=n<.5?p.d1:p.d2;
+    else if(n>.975) c=p.ore;
+    else if(n>.95) c=p.deep;
+    else c=n<.2?p.s[0]:n<.4?p.s[1]:p.s[2];
+    bgx.fillStyle=c; bgx.fillRect(x,y,1,1);
+  }
+}
+function rebuildBG(){ for(let x=0;x<W;x++) drawColumn(x); }
+function blockAt(x){ const d=terrain[x]-base[x]; return d<=0?'grass':d<=2?'dirt':'stone'; }
+function mineAt(x){
+  if(x<0||x>=W||terrain[x]>=H-6) return null;
+  const type=blockAt(x);
+  terrain[x]++; drawColumn(x);
+  S.inv[type]=(S.inv[type]||0)+1; S.mined++;
+  store.set('inv',S.inv); store.set('mined',S.mined);
+  P.swing=12; SFX.mine(); renderInv(); addXP(1);
+  if(S.mined>=25) unlockLocal('dig');
+  return type;
+}
+function renderInv(){
+  $('#invG').textContent=S.inv.grass||0;
+  $('#invD').textContent=S.inv.dirt||0;
+  $('#invS').textContent=S.inv.stone||0;
+  $('#mineCount').textContent=S.mined;
+}
+setInterval(()=>{
+  for(let x=0;x<W;x++) if(terrain[x]>base[x]){ terrain[x]--; drawColumn(x); }
+},2500);
+
+cv.addEventListener('pointerdown',e=>{
+  const r=cv.getBoundingClientRect();
+  const cx=Math.floor((e.clientX-r.left)/r.width*W), cy=Math.floor((e.clientY-r.top)/r.height*H);
+  if(cx<0||cx>=W) return;
+  const t=terrain[cx];
+  if(Math.abs(cx-P.x)<=6 && cy>=t && cy<=t+3){
+    const type=mineAt(cx);
+    if(type){
+      const cols=type==='grass'?['#5EBC2E','#3d8a1c']:type==='dirt'?['#79553A','#4e3320']:['#8a8a8a','#5a5a5a'];
+      burst(e.clientX,e.clientY,cols,12);
+    }
+  }else{
+    P.tx=clamp(cx,3,W-4);
+    unlockLocal('walk');
+  }
+});
+
+function drawOrb(x,y,col,r,a){
+  if(a<=0) return;
+  g.globalAlpha=a; g.fillStyle=col;
+  const cx=Math.round(x), cy=Math.round(y);
+  for(let dx=-r;dx<=r;dx++) for(let dy=-r;dy<=r;dy++) if(dx*dx+dy*dy<=r*r) g.fillRect(cx+dx,cy+dy,1,1);
+  g.globalAlpha=1;
+}
+function drawPlayer(c,px,gy,step,swing){
+  const x=Math.round(px)-5, y=gy-20;
+  const s=Math.sin(step), L=s<0?1:0, R=s>0?1:0;
+  c.fillStyle='rgba(0,0,0,.25)'; c.fillRect(x-1,gy,12,1);
+  if(headReady) c.drawImage(headC,x,y,10,10);
+  else { c.fillStyle=COL.skin; c.fillRect(x,y,10,10); c.fillStyle='#2b2b2b'; c.fillRect(x,y,10,3); }
+  c.fillStyle=COL.shirt; c.fillRect(x+2,y+10,6,6);
+  c.fillStyle=COL.shirtD; c.fillRect(x,y+10,2,5); c.fillRect(x+8,y+10,2,5);
+  if(swing>0){ c.fillStyle=COL.shirtD; c.fillRect(x+8,y+7,2,4); }
+  c.fillStyle=COL.jeans; c.fillRect(x+2,y+16-L,2,4); c.fillRect(x+6,y+16-R,2,4);
+  c.fillStyle=COL.boot; c.fillRect(x+2,y+19-L,2,1); c.fillRect(x+6,y+19-R,2,1);
+}
+function stepPlayer(){
+  const dx=P.tx-P.x;
+  if(Math.abs(dx)>.25){ P.x+=Math.sign(dx)*Math.min(Math.abs(dx),.65); P.dir=Math.sign(dx); P.step+=.32; }
+  else { P.x=P.tx; P.step=0; }
+  if(P.swing>0) P.swing--;
+}
+function readTime(){
+  if(S.timeOverride!==null) return S.timeOverride;
+  const p=new Intl.DateTimeFormat('en-US',{timeZone:'America/Chicago',hour:'numeric',minute:'numeric',hourCycle:'h23'}).formatToParts(new Date());
+  const h=+p.find(x=>x.type==='hour').value%24, m=+p.find(x=>x.type==='minute').value;
+  return (h+m/60)/24;
+}
+function drawWorld(){
+  frameN++;
+  stepPlayer();
+  const p=pal(), up=S.upside;
+  const day=clamp(Math.sin((curT-.25)*Math.PI*2)*4+.5,0,1);
+
+  const gr=g.createLinearGradient(0,0,0,H);
+  gr.addColorStop(0,rgb(mix(p.night[0],p.sky[0],day)));
+  gr.addColorStop(1,rgb(mix(p.night[1],p.sky[1],day)));
+  g.fillStyle=gr; g.fillRect(0,0,W,H);
+
+  if(!up&&day<.95){
+    for(const s of stars){
+      g.globalAlpha=(1-day)*(.45+.45*Math.sin(frameN*.03+s.a));
+      g.fillStyle='#fff'; g.fillRect(s.x|0,s.y|0,1,1);
+    }
+    g.globalAlpha=1;
+  }
+
+  const ph=(curT-.25)*Math.PI*2;
+  drawOrb(W/2-Math.cos(ph)*W*.42,H*.72-Math.sin(ph)*H*.62,up?'#ff5a3a':'#FFF3A0',5,up?.8:clamp(day*2,0,1));
+  drawOrb(W/2+Math.cos(ph)*W*.42,H*.72+Math.sin(ph)*H*.62,'#E6ECFF',4,clamp((1-day)*2,0,1));
+
+  g.fillStyle=up?'rgba(90,20,20,.6)':`rgba(255,255,255,${(.3+.45*day).toFixed(2)})`;
+  for(const c of clouds){
+    c.x+=c.s*(S.rain?.5:1);
+    if(c.x>W+c.w) c.x=-c.w-2;
+    g.fillRect(c.x|0,c.y|0,c.w,3);
+    g.fillRect((c.x+4)|0,(c.y-2)|0,Math.max(1,c.w-8),2);
+  }
+
+  g.fillStyle=up?'#2a0b0b':rgb(mix([40,60,90],[120,176,120],day));
+  const o=frameN*.004;
+  for(let x=0;x<W;x++){
+    const hh=H*.56+Math.sin((x+o)*.035)*H*.05+Math.sin((x+o)*.09)*H*.02;
+    g.fillRect(x,hh|0,1,H);
+  }
+
+  g.drawImage(bgc,0,0);
+
+  for(const tr of trees){
+    const gy=terrain[tr.x]; if(gy===undefined) continue;
+    g.fillStyle=p.trunk;
+    for(let k=1;k<=tr.h;k++) g.fillRect(tr.x,gy-k,1,1);
+    const cy=gy-tr.h-2;
+    for(let dy=-3;dy<=2;dy++) for(let dx=-3;dx<=3;dx++){
+      if(Math.abs(dx)+Math.abs(dy)>4) continue;
+      g.fillStyle=hash(tr.x+dx,cy+dy)<.5?p.leaf[0]:p.leaf[1];
+      g.fillRect(tr.x+dx,cy+dy,1,1);
+    }
+  }
+
+  if(!up&&day<.8){
+    g.fillStyle='#ffef7a';
+    for(const f of flies){
+      g.globalAlpha=(1-day)*(.5+.5*Math.sin(frameN*.05+f.p));
+      g.fillRect((f.x+Math.sin(frameN*.01+f.p)*3)|0,(f.y+Math.cos(frameN*.013+f.p)*2)|0,1,1);
+    }
+    g.globalAlpha=1;
+  }
+
+  const gx=clamp(Math.round(P.x),0,W-1);
+  drawPlayer(g,P.x,terrain[gx],P.step,P.swing);
+
+  if(!up){ g.fillStyle=`rgba(4,8,30,${((1-day)*.35).toFixed(3)})`; g.fillRect(0,0,W,H); }
+
+  if(S.rain){
+    g.fillStyle='rgba(190,215,255,.5)';
+    for(const d of drops){
+      g.fillRect(d.x|0,d.y|0,1,3);
+      d.y+=d.v*2; d.x-=.5;
+      if(d.y>H){ d.y=-3; d.x=Math.random()*W; }
+      if(d.x<0) d.x=W-1;
+    }
+  }
+}
+
+/* ================= 6. PARTICLES ================= */
+const fxC=$('#fx'), fx=fxC.getContext('2d');
+let parts=[];
+function fitFx(){ fxC.width=innerWidth; fxC.height=innerHeight; }
+fitFx(); addEventListener('resize',fitFx);
+function burst(x,y,cols,n=12){
+  for(let i=0;i<n;i++) parts.push({x,y,vx:rnd(-3,3),vy:rnd(-7,-2),life:1,c:cols[i%cols.length],s:rnd(4,8)|0});
+}
+function fxStep(){
+  if(!parts.length){ return; }
+  fx.clearRect(0,0,fxC.width,fxC.height);
+  parts=parts.filter(p=>p.life>0);
+  for(const p of parts){
+    p.vy+=.4; p.x+=p.vx; p.y+=p.vy; p.life-=.025;
+    fx.globalAlpha=Math.max(0,p.life); fx.fillStyle=p.c;
+    fx.fillRect(p.x|0,p.y|0,p.s,p.s);
+  }
+  fx.globalAlpha=1;
+}
+document.addEventListener('pointerdown',e=>{
+  const el=e.target.closest&&e.target.closest('.item,.ach-card,.pcard,.stat');
+  if(el) burst(e.clientX,e.clientY,['#5EBC2E','#79553A','#8a8a8a','#FFEB3B'],8);
+});
+
+/* ================= 7. HERO TEXT & TYPEWRITER ================= */
+let TYPE_LINES=['> connecting…'];
+async function typer(){
+  const el=$('#tt'); let i=0;
+  while(true){
+    const L=TYPE_LINES[i%TYPE_LINES.length];
+    for(let c=0;c<=L.length;c++){ el.textContent=L.slice(0,c); await sleep(45); }
+    await sleep(1800);
+    for(let c=L.length;c>=0;c--){ el.textContent=L.slice(0,c); await sleep(18); }
+    await sleep(250); i++;
+  }
+}
+function renderHero(){
+  const u=D.user;
+  $('#heroName').textContent=(u.name||u.login).toUpperCase();
+  $('#heroEye').textContent=`★ GITHUB · @${u.login} · ${D.source==='live'?'LIVE':D.source==='cache'?'CACHED':'OFFLINE'} ★`;
+  $('#heroNick').textContent='@'+u.login;
+  $('#ghLink').href=u.html_url;
+  $('#mProfile').href=u.html_url;
+  $('#avInit').textContent=u.login.slice(0,2).toUpperCase();
+  $('#heroLead').textContent=u.bio||'No bio yet. Add one on GitHub and it shows up here automatically.';
+  $('#mInfoBio').textContent=u.bio||'Build something together, ask about a repo, or just say hi.';
+  TYPE_LINES=[
+    `> login: @${u.login}`,
+    `> bio: ${u.bio||'(add one on GitHub)'}`,
+    `> repos: ${D.counts.repos} · stars: ${D.counts.stars}`,
+    `> followers: ${u.followers}`,
+    `> base: ${u.location||'unknown'}`,
+    '> status: READY TO BUILD ▌'
+  ];
+  if(u.avatar_url) setAvatar(u.avatar_url);
+}
+
+/* ================= 8. PROFILE ================= */
+function renderBanner(){
+  const b=$('#banner');
+  if(D.error){ b.textContent='⚠ '+D.error; b.hidden=false; }
+  else if(D.source==='cache'){ b.textContent='Showing cached GitHub data (the API is rate-limited or unreachable). It refreshes automatically after the cache window.'; b.hidden=false; }
+  else b.hidden=true;
+}
+function renderProfile(){
+  const u=D.user;
+  $('#profCard').innerHTML=`
+    <div class="pc-top">
+      <div class="pc-av">${u.avatar_url?`<img src="${esc(u.avatar_url)}" alt="">`:esc(u.login.slice(0,2).toUpperCase())}</div>
+      <div>
+        <h3 class="pc-name">${esc(u.name||u.login)}</h3>
+        <a class="pc-login" href="${esc(u.html_url)}" target="_blank" rel="noopener">@${esc(u.login)}</a>
+      </div>
+    </div>
+    <p class="pc-bio">${esc(u.bio||'No bio yet. Add one on GitHub and it appears here automatically.')}</p>
+    <dl class="pc-meta">
+      <dt>📍</dt><dd>${esc(u.location||'Location not set')}</dd>
+      <dt>🏢</dt><dd>${esc(u.company||'Company not set')}</dd>
+      <dt>🔗</dt><dd>${u.blog?`<a href="${safeUrl(u.blog)}" target="_blank" rel="noopener">${esc(u.blog)}</a>`:'No website set'}</dd>
+      <dt>🐦</dt><dd>${u.twitter_username?`<a href="https://x.com/${esc(u.twitter_username)}" target="_blank" rel="noopener">@${esc(u.twitter_username)}</a>`:'Not set'}</dd>
+      <dt>📅</dt><dd>Joined ${dateFmt(u.created_at)}</dd>
+    </dl>`;
+  const c=D.counts;
+  const set=(id,v)=>{ $(id).dataset.to=v; };
+  set('#statRepos',c.repos); set('#statStars',c.stars); set('#statFollowers',u.followers);
+  set('#statFollowing',u.following); set('#statGists',u.public_gists); set('#statYears',c.years);
+  $('#partialNote').textContent=D.partial?'Note: GitHub returned the first 100 repos, so star totals may be partial for accounts with more repos.':'';
+  $('#profLinks').innerHTML=`
+    <a class="btn g sm" href="${esc(u.html_url)}" target="_blank" rel="noopener">🐙 Open GitHub profile</a>
+    <a class="btn sm" href="https://github.com/${esc(u.login)}/${esc(u.login)}" target="_blank" rel="noopener">📖 Profile README</a>
+    <button class="btn sm" id="shareBtn" type="button">🔗 Copy page link</button>`;
+  $('#shareBtn').addEventListener('click',()=>copyText(location.href.split('#')[0]+(USER===CONFIG.user?'':''),'Page link copied.'));
+}
+
+/* ================= 9. REPO CHEST ================= */
+const RC={common:'#cfcfcf',uncommon:'#55ff55',rare:'#55ffff',epic:'#d47bff',legendary:'#ffaa00',mythic:'#ff5555'};
+const ICO={'JavaScript':'🟨','TypeScript':'🟦','HTML':'🟧','CSS':'🟪','Python':'🐍','Java':'☕','C':'⚙️','C++':'⚙️','Rust':'🦀','Go':'🐹','Shell':'🐚','Kotlin':'🟣','Dart':'🎯','PHP':'🐘','Ruby':'💎','C#':'🎵'};
+const ICON=lang=>ICO[lang]||'📦';
+const rarity=r=>{
+  const s=r.stargazers_count||0;
+  return s>=50?'mythic':s>=10?'legendary':s>=5?'epic':s>=1?'rare':r.fork?'common':'uncommon';
+};
+let cFilter='all', cQ='', cSort='stars';
+function renderChips(){
+  const chips=[['all','ALL'],['orig','ORIGINAL'],['fork','FORKS'],...D.langs.slice(0,8).map(l=>[l.name,l.name.toUpperCase()])];
+  $('#cChips').innerHTML=chips.map(([v,t])=>`<button class="filter${cFilter===v?' on':''}" data-f="${esc(v)}" type="button">${esc(t)}</button>`).join('');
+}
+function visibleRepos(){
+  const list=D.repos.filter(r=>{
+    if(cFilter==='orig'&&r.fork) return false;
+    if(cFilter==='fork'&&!r.fork) return false;
+    if(cFilter!=='all'&&cFilter!=='orig'&&cFilter!=='fork'&&r.language!==cFilter) return false;
+    const hay=`${r.name} ${r.description||''} ${r.language||''} ${(r.topics||[]).join(' ')}`.toLowerCase();
+    return hay.includes(cQ);
+  });
+  const sorters={
+    stars:(a,b)=>(b.stargazers_count||0)-(a.stargazers_count||0),
+    updated:(a,b)=>new Date(b.pushed_at||b.updated_at)-new Date(a.pushed_at||a.updated_at),
+    name:(a,b)=>a.name.localeCompare(b.name),
+    oldest:(a,b)=>new Date(a.created_at)-new Date(b.created_at)
+  };
+  list.sort(sorters[cSort]||sorters.stars);
+  const fi=list.findIndex(r=>r.name.toLowerCase()===CONFIG.featured.toLowerCase());
+  if(cFilter==='all'&&!cQ&&fi>0){ const [f]=list.splice(fi,1); list.unshift(f); }
+  return list;
+}
+function renderChest(){
+  renderChips();
+  const list=visibleRepos();
+  $('#chestGrid').innerHTML=list.length?list.map(r=>{
+    const rar=rarity(r), feat=r.name.toLowerCase()===CONFIG.featured.toLowerCase();
+    return `<button class="item${feat?' featured':''}" data-id="${esc(r.id)}" style="--rc:${RC[rar]}" type="button" aria-label="${esc(r.name)}">
+      <span class="rar">${rar}</span>
+      ${feat?'<span class="feat">FEATURED</span>':''}
+      <span class="big">${ICON(r.language)}</span>
+      <h5>${esc(r.name)}</h5>
+      <p class="desc">${esc(r.description||'No description.')}</p>
+      <span class="meta">★ ${fmt(r.stargazers_count)} · ${esc(r.language||'—')}${r.fork?' · fork':''}</span>
+    </button>`;
+  }).join(''):'<p class="px empty">EMPTY CHEST · TRY ANOTHER FILTER</p>';
+  $('#chestCount').textContent=`${list.length} of ${D.repos.length} repos shown`;
+}
+function openRepo(r){
+  SFX.pop();
+  const rar=rarity(r);
+  const clone=`git clone https://github.com/${D.user.login}/${r.name}.git`;
+  openModal(`${ICON(r.language)} ${r.name.toUpperCase()}`,`
+    <p class="mdesc">${esc(r.description||'No description provided.')}</p>
+    <dl>
+      <dt>LANGUAGE</dt><dd>${esc(r.language||'—')}</dd>
+      <dt>STARS</dt><dd>★ ${fmt(r.stargazers_count)}</dd>
+      <dt>FORKS</dt><dd>⑂ ${fmt(r.forks_count)}</dd>
+      <dt>ISSUES</dt><dd>${fmt(r.open_issues_count)} open</dd>
+      <dt>RARITY</dt><dd style="color:${RC[rar]};text-shadow:1px 1px 0 #000">${rar.toUpperCase()}</dd>
+      <dt>UPDATED</dt><dd>${ago(r.pushed_at||r.updated_at)}</dd>
+      <dt>CREATED</dt><dd>${dateFmt(r.created_at)}</dd>
+    </dl>
+    ${(r.topics||[]).length?`<div class="topics">${r.topics.map(t=>`<span class="topic">${esc(t)}</span>`).join('')}</div>`:''}
+    <div class="actions">
+      <a class="btn g sm" href="${esc(r.html_url)}" target="_blank" rel="noopener">🔗 Open on GitHub</a>
+      ${r.homepage?`<a class="btn sm" href="${safeUrl(r.homepage)}" target="_blank" rel="noopener">🌐 Live site</a>`:''}
+      <button class="btn sm" id="cloneBtn" type="button">📋 Copy clone command</button>
+    </div>
+    <code class="clone">${esc(clone)}</code>`);
+  $('#cloneBtn').addEventListener('click',()=>copyText(clone,'Clone command copied.'));
+}
+$('#cChips').addEventListener('click',e=>{
+  const b=e.target.closest('.filter'); if(!b) return;
+  cFilter=b.dataset.f; SFX.click(); renderChest();
+});
+$('#cSearch').addEventListener('input',e=>{ cQ=e.target.value.trim().toLowerCase(); renderChest(); });
+$('#cSort').addEventListener('change',e=>{ cSort=e.target.value; renderChest(); });
+$('#chestGrid').addEventListener('click',e=>{
+  const b=e.target.closest('.item'); if(!b) return;
+  const r=D.repos.find(x=>String(x.id)===b.dataset.id);
+  if(r) openRepo(r);
+});
+
+/* ================= 10. SKILLS & RADAR ================= */
+const rad=$('#radar'), rg=rad.getContext('2d');
+let radarItems=[], radarSeen=false;
+function renderSkills(){
+  const top=D.langs.slice(0,6), max=top[0]?.pct||1;
+  $('#langBars').innerHTML=top.length?top.map(l=>`
+    <div class="skill">
+      <div class="row"><span>${esc(l.name)}</span><span>${l.n} repo${l.n>1?'s':''} · ${l.pct}%</span></div>
+      <div class="bar gold"><i data-w="${Math.round(l.pct/max*100)}"></i></div>
+    </div>`).join(''):'<p class="mini-note" style="font-size:24px;color:#ddd">No languages detected yet. Push a repo with a detected language and it shows up here.</p>';
+  radarItems=top.map(l=>({label:l.name,v:l.pct/max}));
+  while(radarItems.length<3) radarItems.push({label:'—',v:0});
+  if(radarSeen) animRadar(); else drawRadar(0);
+}
+function drawRadar(k){
+  const Wd=rad.width, Hd=rad.height, cx=Wd/2, cy=Hd/2, R=Wd*.3, N=radarItems.length;
+  const pt=(i,r)=>{const a=-Math.PI/2+i*2*Math.PI/N;return [cx+Math.cos(a)*r,cy+Math.sin(a)*r]};
+  rg.clearRect(0,0,Wd,Hd);
+  rg.strokeStyle='#3a3a3a'; rg.lineWidth=2;
+  for(let ring=1;ring<=4;ring++){
+    rg.beginPath();
+    for(let i=0;i<N;i++){const [x,y]=pt(i,R*ring/4); i?rg.lineTo(x,y):rg.moveTo(x,y);}
+    rg.closePath(); rg.stroke();
+  }
+  rg.textAlign='center'; rg.textBaseline='middle'; rg.font='24px VT323, monospace'; rg.fillStyle='#fff';
+  for(let i=0;i<N;i++){
+    const [x,y]=pt(i,R); rg.beginPath(); rg.moveTo(cx,cy); rg.lineTo(x,y); rg.stroke();
+    const [lx,ly]=pt(i,R+34); rg.fillText(radarItems[i].label,lx,ly);
+  }
+  rg.beginPath();
+  radarItems.forEach((s,i)=>{const [x,y]=pt(i,R*s.v*k); i?rg.lineTo(x,y):rg.moveTo(x,y);});
+  rg.closePath();
+  rg.fillStyle='rgba(124,252,0,.3)'; rg.fill();
+  rg.strokeStyle='#7CFC00'; rg.lineWidth=4; rg.stroke();
+}
+function animRadar(){
+  const t0=performance.now();
+  (function step(now){
+    const p=clamp((now-t0)/1200,0,1);
+    drawRadar(1-Math.pow(1-p,3));
+    if(p<1) requestAnimationFrame(step);
+  })(t0);
+}
+
+/* ================= 11. ACTIVITY ================= */
+const EV={
+  PushEvent:['⬆️','Pushed to'],CreateEvent:['🆕','Created in'],WatchEvent:['⭐','Starred'],ForkEvent:['🍴','Forked'],
+  IssuesEvent:['🐞','Issue activity in'],PullRequestEvent:['🔀','Pull request in'],IssueCommentEvent:['💬','Commented in'],
+  DeleteEvent:['🗑️','Deleted branch in'],ReleaseEvent:['🚀','Released in'],PullRequestReviewEvent:['👀','Reviewed in']
+};
+function renderActivity(){
+  const now=new Date(), counts={};
+  D.events.forEach(e=>{const k=new Date(e.created_at).toDateString(); counts[k]=(counts[k]||0)+1;});
+  let cells='';
+  for(let i=34;i>=0;i--){
+    const d=new Date(now.getTime()-i*864e5), k=d.toDateString(), n=counts[k]||0;
+    const lvl=n===0?0:n<3?1:n<6?2:3;
+    cells+=`<i class="hc l${lvl}" title="${esc(d.toDateString())}: ${n} event${n===1?'':'s'}"></i>`;
+  }
+  $('#heat').innerHTML=cells;
+  const pushes=D.events.filter(e=>e.type==='PushEvent').length;
+  const starred=D.events.filter(e=>e.type==='WatchEvent').length;
+  $('#actStats').innerHTML=`<span>Feed events: <b>${D.events.length}</b></span><span>Pushes: <b>${pushes}</b></span><span>Stars given: <b>${starred}</b></span><span>Last 30 days: <b>${D.counts.recent}</b></span>`;
+  $('#evList').innerHTML=D.events.length?D.events.slice(0,12).map(e=>{
+    const [ic,label]=EV[e.type]||['•','Activity in'];
+    const repo=e.repo?.name||'unknown';
+    return `<li><span>${ic}</span><span>${esc(label)} <a href="https://github.com/${esc(repo)}" target="_blank" rel="noopener">${esc(repo)}</a></span><time>${ago(e.created_at)}</time></li>`;
+  }).join(''):'<li><span>•</span><span>No recent public activity in the feed.</span><time></time></li>';
+}
+
+/* ================= 12. CRAFTING ================= */
+const INGR=Object.keys(ICO);
+const RECIPES=[
+  {need:['JavaScript','HTML','CSS'],name:'WEB WIZARD',text:'Structure, style, and behavior. The classic front-end trio.'},
+  {need:['TypeScript','HTML','CSS'],name:'TYPED FRONTEND',text:'Typed logic meets a styled interface.'},
+  {need:['Python','Shell','C'],name:'SCRIPT SMITH',text:'Automation, glue code, and low-level tools.'},
+  {need:['Rust','C','C++'],name:'SYSTEMS SMITH',text:'Close-to-the-metal craft with memory discipline.'},
+  {need:['Java','Kotlin','Dart'],name:'MOBILE MINER',text:'JVM and app-first languages for real devices.'},
+  {need:['Go','Rust','Python'],name:'BACKEND BLACKSMITH',text:'Services, tools, and data pipelines forged together.'},
+  {need:['JavaScript','Python','Shell'],name:'AUTOMATION ALCHEMIST',text:'Scripts that turn chores into potions of time saved.'}
+];
+let sel=[];
+function renderCraftUI(){
+  $('#cgrid').innerHTML=INGR.map(x=>`<button class="cslot${sel.includes(x)?' sel':''}" data-c="${esc(x)}" type="button" aria-pressed="${sel.includes(x)}"><span>${ICON(x)}</span><small>${esc(x)}</small></button>`).join('');
+  evalCraft(); renderRecipes();
+}
+function evalCraft(){
+  const out=$('#cout');
+  if(sel.length<3){
+    out.innerHTML=`<div>${sel.length?sel.map(esc).join(' + '):'Empty table'}<br><small class="mini-note">Pick ${3-sel.length} more</small></div>`;
+    return;
+  }
+  const key=[...sel].sort().join('|');
+  const hit=RECIPES.find(r=>[...r.need].sort().join('|')===key);
+  if(!hit){
+    out.innerHTML=`<div><b class="px" style="font-size:12px">MYSTERY BREW</b><br><br>No recipe for that combo. Try another three.</div>`;
+    return;
+  }
+  const owned=hit.need.filter(n=>D.langs.some(l=>l.name===n));
+  if(owned.length===3){
+    out.innerHTML=`<div><b class="px" style="font-size:12px;color:var(--gold)">${hit.name}</b><br><br>${esc(hit.text)}<br><small class="mini-note">✔ All three appear as a repo's main language.</small></div>`;
+    if(!S.crafted.includes(hit.name)){
+      S.crafted.push(hit.name); store.set('crafted',S.crafted);
+      SFX.level(); addXP(15); unlockLocal('craft'); renderRecipes();
+    }
+  }else{
+    const missing=hit.need.filter(n=>!owned.includes(n));
+    out.innerHTML=`<div><b class="px" style="font-size:12px">RECIPE FOUND</b><br><br>Needs ${missing.map(esc).join(', ')} as a main language in a public repo before it can be crafted.</div>`;
+  }
+}
+function renderRecipes(){
+  $('#recipes').innerHTML=RECIPES.map(r=>{
+    const got=S.crafted.includes(r.name);
+    return `<div class="recipe ${got?'got':''}"><h6>${got?esc(r.name):'??? RECIPE'}</h6>${got?`${r.need.map(esc).join(' + ')}<br>${esc(r.text)}`:'Craft this combo to reveal it.'}</div>`;
+  }).join('');
+}
+$('#cgrid').addEventListener('click',e=>{
+  const b=e.target.closest('.cslot'); if(!b) return;
+  const c=b.dataset.c;
+  if(sel.includes(c)) sel=sel.filter(x=>x!==c);
+  else{ if(sel.length>=3) sel.shift(); sel.push(c); }
+  SFX.click(); renderCraftUI();
+});
+$('#cClear').addEventListener('click',()=>{ sel=[]; SFX.click(); renderCraftUI(); });
+
+/* ================= 13. MAILBOX & EXPORT ================= */
+$('#mMsg').addEventListener('input',e=>{ $('#mCount').textContent=e.target.value.length; });
+$('#mCopy').addEventListener('click',()=>copyText($('#mMsg').value,'Your message is on the clipboard.'));
+$('#mForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const name=$('#mName').value.trim(), email=$('#mEmail').value.trim(), msg=$('#mMsg').value.trim();
+  if(!name||!msg||!/^\S+@\S+\.\S+$/.test(email)){
+    toast('⚠️','MISSING INFO','Please add your name, a valid email, and a message.',false);
+    return;
+  }
+  const subj=$('#mSubj').value;
+  const text=`${msg}\n\n— ${name} <${email}>`;
+  unlockLocal('mail');
+  if(CONFIG.email){
+    SFX.pop();
+    location.href=`mailto:${CONFIG.email}?subject=${encodeURIComponent(`[${subj}] ${USER} portfolio`)}&body=${encodeURIComponent(text)}`;
+  }else{
+    copyText(text,'No email address is configured yet. Your message is copied; paste it into GitHub or email.');
+  }
+  e.target.reset(); $('#mCount').textContent='0';
+});
+function profileCardText(){
+  const u=D.user, c=D.counts;
+  const top=D.repos.filter(r=>!r.fork).sort((a,b)=>(b.stargazers_count||0)-(a.stargazers_count||0)).slice(0,5);
+  return `${u.name||u.login} (@${u.login}) · Developer Profile
+Generated from the GitHub public API on ${new Date().toLocaleDateString('en-US')}
+Source: ${u.html_url}
+
+Bio: ${u.bio||'—'}
+Location: ${u.location||'—'}
+Company: ${u.company||'—'}
+Website: ${u.blog||'—'}
+Joined GitHub: ${dateFmt(u.created_at)} (${c.years} years)
+
+Public repos: ${c.repos}
+Stars earned (first 100 repos): ${c.stars}
+Followers: ${u.followers} · Following: ${u.following}
+Languages: ${D.langs.slice(0,6).map(l=>`${l.name} ${l.pct}%`).join(', ')||'—'}
+
+Top repos:
+${top.map(r=>`- ${r.name} · ★ ${r.stargazers_count||0} · ${r.language||'—'}\n  ${r.html_url}`).join('\n')||'- none'}
+`;
+}
+$('#exportTxt').addEventListener('click',()=>{
+  download(`${USER}-profile-card.txt`,profileCardText());
+  toast('📄','PROFILE EXPORTED',`${USER}-profile-card.txt`);
+});
+
+/* ================= 14. CONSOLE ================= */
+const HELP=[
+  'Commands:',
+  '  help                  show this list',
+  '  goto <name|1-8>       jump to a section (profile, repos, adv, skills, activity, craft, mail)',
+  '  repo <name>           open a repo from the chest',
+  '  stats                 show profile numbers and your progress',
+  '  langs                 list language share from your repos',
+  '  ach                   list unlocked advancements',
+  '  user <login>          load a different GitHub account',
+  '  time day|night|real   set world time',
+  '  rain                  toggle weather',
+  '  upside                toggle Upside Down',
+  '  mine                  mine the block under your character',
+  '  sound                 toggle sound',
+  '  reload                clear cache and refetch GitHub data',
+  '  creeper               ssssss…',
+  '  reset yes             wipe all saved progress'
+];
+const ALIAS={home:0,spawn:0,profile:1,repos:2,chest:2,adv:3,tree:3,advancements:3,skills:4,enchant:4,activity:5,craft:6,crafting:6,mail:7,contact:7};
+function resolveSec(v){
+  if(!v) return null;
+  if(/^[1-8]$/.test(v)) return SEC[+v-1];
+  if(ALIAS[v]!==undefined) return SEC[ALIAS[v]];
+  return null;
+}
+function addLog(text,cls=''){
+  const log=$('#conLog');
+  const d=document.createElement('div');
+  if(cls) d.className=cls;
+  d.textContent=text;
+  log.appendChild(d); log.scrollTop=log.scrollHeight;
+}
+function conRun(line){
+  const parts=line.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  if(!parts.length) return;
+  const [c,...a]=parts;
+  const rawArg=line.trim().split(/\s+/).slice(1).join(' ');
+  addLog('> '+line.trim(),'cmd');
+  unlockLocal('console');
+  const out=[];
+  switch(c){
+    case 'help': out.push(...HELP); break;
+    case 'goto': {
+      const id=resolveSec(a[0]);
+      if(!id){ out.push('unknown section. try: profile, repos, adv, skills, activity, craft, mail or 1-8'); break; }
+      document.getElementById(id).scrollIntoView({behavior:'smooth'});
+      out.push('going to '+id); break;
+    }
+    case 'repo': {
+      const r=D.repos.find(x=>x.name.toLowerCase()===rawArg.toLowerCase());
+      if(r){ openRepo(r); out.push('opened '+r.name); }
+      else out.push('no repo named "'+rawArg+'". Try the repo chest search.');
+      break;
+    }
+    case 'stats': out.push(`login @${D.user.login} · repos ${D.counts.repos} · stars ${D.counts.stars} · followers ${D.user.followers}`,`level ${level()} · xp ${totalXP()} · mined ${S.mined} · advancements ${allAdv().filter(x=>x.got).length}/${allAdv().length}`); break;
+    case 'langs':
+      if(!D.langs.length) out.push('no languages detected yet');
+      else D.langs.forEach(l=>out.push(`${l.name.padEnd(12)} ${l.pct}%  (${l.n} repo${l.n>1?'s':''})`));
+      break;
+    case 'ach':
+      const got=allAdv().filter(x=>x.got);
+      if(!got.length) out.push('no advancements yet');
+      else got.forEach(x=>out.push('✔ '+x.n));
+      break;
+    case 'user': {
+      const v=(a[0]||'');
+      if(!/^[a-z0-9-]{1,39}$/i.test(v)){ out.push('usage: user <github-login>'); break; }
+      out.push('loading '+v+'…');
+      location.search='?user='+encodeURIComponent(v);
+      break;
+    }
+    case 'time': {
+      const v=a[0];
+      if(v==='day') S.timeOverride=.5;
+      else if(v==='night') S.timeOverride=.95;
+      else if(v==='real') S.timeOverride=null;
+      else { out.push('usage: time day|night|real'); break; }
+      out.push('time set to '+v); break;
+    }
+    case 'rain': toggleRain(); out.push('rain '+(S.rain?'on':'off')); break;
+    case 'upside': toggleUpside(); out.push('upside '+(S.upside?'on':'off')); break;
+    case 'mine': {
+      const t=mineAt(Math.round(P.x));
+      out.push(t?`mined a ${t} block`:'nothing to mine here'); break;
+    }
+    case 'sound': toggleSound(); out.push('sound '+(S.sound?'on':'off')); break;
+    case 'reload':
+      store.clear(); out.push('cache cleared, reloading…');
+      setTimeout(()=>location.reload(),400); break;
+    case 'creeper': {
+      const b=document.body;
+      b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake');
+      setTimeout(()=>b.classList.remove('shake'),600);
+      beep(120,.3,'sawtooth',.08);
+      out.push('ssssss… BOOM. (Max would have run.)'); break;
+    }
+    case 'reset':
+      if(a[0]==='yes'){ store.clear(); location.reload(); }
+      else out.push('this wipes all saved progress. type: reset yes');
+      break;
+    default: out.push('unknown command: '+c+' (try help)');
+  }
+  out.forEach(t=>addLog(t));
+}
+function openCon(){
+  $('#console').classList.add('open');
+  if(!$('#conLog').children.length) HELP.forEach(t=>addLog(t));
+  $('#conIn').focus();
+}
+function closeCon(){ $('#console').classList.remove('open'); }
+$('#conIn').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    const v=e.target.value; e.target.value='';
+    if(v.trim()) conRun(v);
+  }
+});
+
+/* ================= 15. TOGGLES, CLOCK & DEBUG ================= */
+function updateTime(){ curT=readTime(); }
+function clockText(){
+  return new Intl.DateTimeFormat('en-US',{timeZone:'America/Chicago',hour:'numeric',minute:'2-digit'}).format(new Date())+' CT'+(S.timeOverride!==null?' · forced':'');
+}
+function toggleUpside(force){
+  S.upside=typeof force==='boolean'?force:!S.upside;
+  document.body.classList.toggle('upside',S.upside);
+  $('#btnUp').classList.toggle('on',S.upside);
+  rebuildBG();
+  (S.upside?SFX.low:SFX.pop)();
+  toast('🌀',S.upside?'UPSIDE DOWN':'BACK TO HAWKINS',S.upside?'The world flips. Stay close to the light.':'Back to normal.',false);
+  if(S.upside) unlockLocal('upside');
+}
+function toggleRain(){
+  S.rain=!S.rain;
+  $('#btnRain').classList.toggle('on',S.rain);
+  SFX.pop();
+  toast('🌧️',S.rain?'RAIN':'CLEAR SKY',S.rain?'Clouds are moving faster.':'The sky is clear again.',false);
+}
+function cycleTime(){
+  if(S.timeOverride===null) S.timeOverride=.5;
+  else if(S.timeOverride===.5) S.timeOverride=.95;
+  else S.timeOverride=null;
+  updateTime();
+  toast('🌗','TIME',S.timeOverride===null?'Real Central Time':S.timeOverride===.5?'Forced daytime':'Forced nighttime',false);
+  SFX.click();
+}
+function toggleSound(){
+  S.sound=!S.sound; store.set('sound',S.sound);
+  $('#btnSound').textContent=S.sound?'🔊':'🔇';
+  if(S.sound) SFX.click();
+}
+$('#btnUp').addEventListener('click',()=>toggleUpside());
+$('#btnRain').addEventListener('click',toggleRain);
+$('#btnSound').addEventListener('click',toggleSound);
+$('#btnCon').addEventListener('click',openCon);
+$('#refreshBtn').addEventListener('click',()=>{ store.clear(); toast('🔄','REFRESHING','Fetching the latest GitHub data…'); setTimeout(()=>location.reload(),500); });
+setInterval(()=>{
+  updateTime();
+  $('#clock').textContent=clockText();
+  if(document.body.classList.contains('f3')){
+    const day=clamp(Math.sin((curT-.25)*Math.PI*2)*4+.5,0,1);
+    $('#debug').textContent=
+`GITHUB USER: @${D.user.login} (${D.source})
+Local time: ${clockText()}
+Daylight: ${(day*100).toFixed(0)}%
+Rain: ${S.rain?'on':'off'} · Upside Down: ${S.upside?'on':'off'}
+Player x: ${P.x.toFixed(1)} · Mined: ${S.mined}
+Level: ${level()} · XP: ${totalXP()}
+Repos: ${D.counts.repos} · Stars: ${D.counts.stars} · Followers: ${D.user.followers}`;
+  }
+},1000);
+
+/* ================= 16. MODAL ================= */
+function openModal(title,html){
+  $('#mTitle').textContent=title;
+  $('#mBody').innerHTML=html;
+  $('#modal').classList.add('open');
+  document.body.classList.add('locked');
+  $('#mClose').focus();
+}
+function closeModal(){
+  if(!$('#modal').classList.contains('open')) return;
+  $('#modal').classList.remove('open');
+  document.body.classList.remove('locked');
+}
+$('#mClose').addEventListener('click',()=>{ SFX.click(); closeModal(); });
+$('#modal').addEventListener('click',e=>{ if(e.target.id==='modal') closeModal(); });
+
+/* ================= 17. KEYBOARD ================= */
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){ closeModal(); closeCon(); return; }
+  if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+  if(e.ctrlKey||e.metaKey||e.altKey) return;
+  if(e.key==='F3'){ e.preventDefault(); document.body.classList.toggle('f3'); return; }
+  const k=e.key.toLowerCase();
+  if(k==='/'||k==='t'){ e.preventDefault(); openCon(); return; }
+  if(/^[1-8]$/.test(e.key)){ document.getElementById(SEC[+e.key-1]).scrollIntoView({behavior:'smooth'}); return; }
+  if(k==='u') toggleUpside();
+  else if(k==='r') toggleRain();
+  else if(k==='n') cycleTime();
+  else if(k==='m') toggleSound();
+});
+
+/* ================= 18. SCROLL SPY, PROGRESS & REVEAL ================= */
+const secEls=SEC.map(id=>document.getElementById(id));
+let scrollQueued=false;
+function onScroll(){
+  scrollQueued=false;
+  const y=scrollY, max=document.documentElement.scrollHeight-innerHeight;
+  $('#progress').style.width=(max>0?y/max*100:0)+'%';
+  let cur=0;
+  secEls.forEach((s,i)=>{ if(s.getBoundingClientRect().top<innerHeight*.4) cur=i; });
+  $$('#hotbar .slot').forEach((el,i)=>el.classList.toggle('on',i===cur));
+  if(y>innerHeight*.5) unlockLocal('hello-check');
+}
+addEventListener('scroll',()=>{
+  if(!scrollQueued){ scrollQueued=true; requestAnimationFrame(onScroll); }
+},{passive:true});
+
+const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function countUp(el,target){
+  if(reduceMotion||!Number.isFinite(target)){ el.textContent=fmt(target); return; }
+  const t0=performance.now(), dur=1200;
+  (function step(now){
+    const p=clamp((now-t0)/dur,0,1);
+    el.textContent=fmt(Math.round(target*(1-Math.pow(1-p,3))));
+    if(p<1) requestAnimationFrame(step);
+  })(t0);
+}
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(!en.isIntersecting) return;
+    const el=en.target;
+    el.classList.add('in');
+    if(el.dataset.to!==undefined) countUp(el,+el.dataset.to);
+    if(el.matches('.bar>i')) el.style.width=el.dataset.w+'%';
+    if(el.id==='radar'&&!radarSeen){ radarSeen=true; animRadar(); }
+    io.unobserve(el);
+  });
+},{threshold:.2});
+const heroIO=new IntersectionObserver(es=>es.forEach(e=>{heroVisible=e.isIntersecting;}),{threshold:0});
+heroIO.observe(cv);
+
+/* ================= 19. MAIN LOOP ================= */
+function loop(){
+  if(heroVisible) drawWorld();
+  fxStep();
+  requestAnimationFrame(loop);
+}
+
+/* ================= 20. BOOT ================= */
+function renderAll(){
+  renderBanner();
+  renderHero();
+  renderProfile();
+  renderChest();
+  renderAdv();
+  renderSkills();
+  renderActivity();
+  renderCraftUI();
+  renderHUD();
+  renderInv();
+  updateTime();
+  $('#clock').textContent=clockText();
+  $('#btnSound').textContent=S.sound?'🔊':'🔇';
+  document.title=`${D.user.name||D.user.login} · Minecraft Developer Portfolio`;
+  $$('.reveal, [data-to], .bar>i, #radar').forEach(el=>io.observe(el));
+}
+async function boot(){
+  $('#ldTxt').textContent=`Fetching github.com/${USER}…`;
+  try{
+    D=await loadAll();
+  }catch(e){
+    D=emptyData();
+    D.source='offline';
+    D.error=e.code==='NOTFOUND'
+      ?`GitHub user "${USER}" was not found. Check the username or use ?user=login in the URL.`
+      :e.code==='RATE'
+        ?'GitHub API rate limit reached (about 60 requests per hour per IP). Showing the offline layout. Try again later.'
+        :'Could not reach the GitHub API. Showing the offline layout.';
+  }
+  dataReady=true;
+  renderAll();
+  resizeWorld();
+}
+let rzT;
+addEventListener('resize',()=>{ clearTimeout(rzT); rzT=setTimeout(resizeWorld,150); });
+
+requestAnimationFrame(loop);
+let lp=0, booted=false;
+const msgs=['Connecting to api.github.com…','Reading repositories…','Counting stars…','Crafting your skin…','Opening the world…'];
+const li=setInterval(()=>{
+  lp=booted?Math.min(100,lp+rnd(8,14)):Math.min(90,lp+rnd(2,5));
+  $('#ldBar').style.width=lp+'%';
+  $('#ldTxt').textContent=msgs[Math.min(msgs.length-1,Math.floor(lp/20))];
+  if(lp>=100){ clearInterval(li); setTimeout(hideLoader,300); }
+},120);
+boot().then(()=>{ booted=true; });
+
+function hideLoader(){
+  $('#loader').classList.add('done');
+  typer();
+  setTimeout(()=>{
+    if(D.error) toast('⚠️','OFFLINE LAYOUT',D.error);
+    else toast('🎮','WORLD LOADED',`Welcome to @${D.user.login}'s world. Press / for commands.`);
+  },700);
+}
+</script>
+</body>
+</html>
